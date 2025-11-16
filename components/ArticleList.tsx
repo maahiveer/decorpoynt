@@ -46,10 +46,24 @@ export function ArticleList() {
       
       // Then fetch the paginated articles
       // Fetch all published articles and sort them properly
+      console.log('Querying articles with status=published...')
       const { data: allArticles, error: fetchError } = await supabase
         .from('articles')
         .select('*')
         .eq('status', 'published')
+      
+      console.log('Raw query result:', {
+        count: allArticles?.length || 0,
+        error: fetchError?.message,
+        articles: allArticles?.map((a: any) => ({
+          id: a.id,
+          title: a.title,
+          slug: a.slug,
+          status: a.status,
+          published_at: a.published_at,
+          created_at: a.created_at
+        }))
+      })
       
       if (fetchError) {
         console.error('Error fetching articles:', fetchError)
@@ -73,14 +87,26 @@ export function ArticleList() {
       }
 
       console.log('Articles fetched:', data)
-      // Debug: Log slugs to check if they exist
-      if (data) {
-        data.forEach((article: any) => {
+      console.log('Total articles found:', data?.length || 0)
+      
+      // Debug: Log all article details
+      if (data && data.length > 0) {
+        console.log('Article details:')
+        data.forEach((article: any, index: number) => {
+          console.log(`${index + 1}. ${article.title}`)
+          console.log(`   - Slug: ${article.slug || 'MISSING'}`)
+          console.log(`   - Status: ${article.status}`)
+          console.log(`   - Published At: ${article.published_at || 'NULL'}`)
+          console.log(`   - Created At: ${article.created_at}`)
           if (!article.slug) {
-            console.warn('Article missing slug:', article.id, article.title)
+            console.warn('⚠️ Article missing slug:', article.id, article.title)
           }
         })
+      } else {
+        console.warn('⚠️ No articles returned from query!')
+        console.log('Query filters: status=published')
       }
+      
       setArticles(data || [])
       
       // Calculate total pages
