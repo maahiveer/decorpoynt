@@ -3,8 +3,9 @@ import { BlogHero } from "@/components/BlogHero";
 import { ArticleList } from "@/components/ArticleList";
 import { BlogFooter } from "@/components/BlogFooter";
 
-// Revalidate homepage every 30 seconds so newly published articles appear
-export const revalidate = 30;
+// Force dynamic rendering so newly published articles appear immediately
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default function Home() {
   return (

@@ -9,34 +9,13 @@ interface ArticlePageProps {
   }>
 }
 
-// Allow dynamic route generation for new articles
+// Force dynamic rendering so newly published articles appear immediately
+export const dynamic = 'force-dynamic';
 export const dynamicParams = true
 
+// Don't pre-generate pages - render on-demand for immediate updates
 export async function generateStaticParams() {
-  // Check if Supabase is configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co') {
-    return []
-  }
-
-  try {
-    const { data: articles } = await supabase
-      .from('articles')
-      .select('slug')
-      .eq('status', 'published')
-
-    // Filter out invalid slugs
-    return articles
-      ?.filter((article: any) => {
-        const slug = article?.slug
-        return slug && typeof slug === 'string' && slug.trim() !== ''
-      })
-      .map((article: any) => ({
-        slug: article.slug,
-      })) || []
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
+  return []
 }
 
 export async function generateMetadata({ params }: ArticlePageProps) {
