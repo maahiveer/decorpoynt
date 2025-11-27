@@ -5,6 +5,11 @@ import { AdminLayout } from '@/components/AdminLayout'
 import { supabase } from '@/lib/supabase'
 import { Save, Image as ImageIcon } from 'lucide-react'
 
+interface SiteSetting {
+    setting_key: string
+    setting_value: string | null
+}
+
 export default function SettingsPage() {
     const [leftBanner, setLeftBanner] = useState('')
     const [rightBanner, setRightBanner] = useState('')
@@ -28,8 +33,9 @@ export default function SettingsPage() {
             if (error) throw error
 
             if (data) {
-                const leftBannerData = data.find(s => s.setting_key === 'homepage_left_banner')
-                const rightBannerData = data.find(s => s.setting_key === 'homepage_right_banner')
+                const settings = data as SiteSetting[]
+                const leftBannerData = settings.find(s => s.setting_key === 'homepage_left_banner')
+                const rightBannerData = settings.find(s => s.setting_key === 'homepage_right_banner')
 
                 setLeftBanner(leftBannerData?.setting_value || '')
                 setRightBanner(rightBannerData?.setting_value || '')

@@ -1,20 +1,37 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Article } from '@/lib/supabase'
+import { Article, supabase } from '@/lib/supabase'
 import { BlogHeader } from '@/components/BlogHeader'
 import { BlogFooter } from '@/components/BlogFooter'
 import { Calendar, Clock, User } from 'lucide-react'
 
 export default function PreviewPage() {
   const [article, setArticle] = useState<Article | null>(null)
+  const [categories, setCategories] = useState<any[]>([])
 
   useEffect(() => {
     const previewData = sessionStorage.getItem('previewArticle')
     if (previewData) {
       setArticle(JSON.parse(previewData))
     }
+    fetchCategories()
   }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const { data } = await supabase
+        .from('categories')
+        .select('id, name, slug')
+        .order('name', { ascending: true })
+
+      if (data) {
+        setCategories(data)
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    }
+  }
 
   if (!article) {
     return (
@@ -47,8 +64,8 @@ export default function PreviewPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      <BlogHeader />
-      
+      <BlogHeader categories={categories} />
+
       <main className="py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
@@ -68,13 +85,13 @@ export default function PreviewPage() {
                   />
                 </div>
               )}
-              
+
               <div className="p-8 sm:p-12">
                 <header className="mb-8">
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6">
                     {article.title}
                   </h1>
-                  
+
                   <div className="flex flex-wrap items-center gap-6 text-sm text-slate-600 dark:text-slate-400 mb-6">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
@@ -112,7 +129,7 @@ export default function PreviewPage() {
           </div>
         </div>
       </main>
-      
+
       <BlogFooter />
     </div>
   )

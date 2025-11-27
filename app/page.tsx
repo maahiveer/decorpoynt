@@ -69,6 +69,11 @@ async function getCategories() {
   }
 }
 
+interface SiteSetting {
+  setting_key: string
+  setting_value: string | null
+}
+
 async function getHomepageBanners() {
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -89,8 +94,9 @@ async function getHomepageBanners() {
       return { leftBanner: null, rightBanner: null }
     }
 
-    const leftBanner = data?.find(s => s.setting_key === 'homepage_left_banner')?.setting_value || null
-    const rightBanner = data?.find(s => s.setting_key === 'homepage_right_banner')?.setting_value || null
+    const settings = data as SiteSetting[]
+    const leftBanner = settings?.find(s => s.setting_key === 'homepage_left_banner')?.setting_value || null
+    const rightBanner = settings?.find(s => s.setting_key === 'homepage_right_banner')?.setting_value || null
 
     return { leftBanner, rightBanner }
   } catch (error) {

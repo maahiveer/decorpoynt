@@ -1,16 +1,46 @@
 import { BlogHeader } from '@/components/BlogHeader'
 import { BlogFooter } from '@/components/BlogFooter'
+import { supabase } from '@/lib/supabase'
 
 export const metadata = {
-  title: 'Affiliate Disclaimer - TrackScale Blog',
-  description: 'Affiliate disclaimer for TrackScale Blog. Learn about our affiliate relationships and how they may affect our content.',
+  title: 'Affiliate Disclaimer - PickPoynt',
+  description: 'Affiliate disclaimer for PickPoynt. Learn about our affiliate relationships and how they may affect our content.',
 }
 
-export default function AffiliateDisclaimerPage() {
+async function getCategories() {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co' ||
+    !supabase
+  ) {
+    return []
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id, name, slug')
+      .order('name', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching categories:', error)
+      return []
+    }
+
+    return data || []
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+    return []
+  }
+}
+
+export default async function AffiliateDisclaimerPage() {
+  const categories = await getCategories()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      <BlogHeader />
-      
+      <BlogHeader categories={categories} />
+
       <main className="py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
@@ -18,7 +48,7 @@ export default function AffiliateDisclaimerPage() {
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-8">
                 Affiliate Disclaimer
               </h1>
-              
+
               <div className="prose prose-lg max-w-none dark:prose-invert">
                 <p className="text-slate-600 dark:text-slate-400 mb-6">
                   <strong>Last updated:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -29,21 +59,21 @@ export default function AffiliateDisclaimerPage() {
                     Important Notice
                   </h2>
                   <p className="text-yellow-700 dark:text-yellow-300">
-                    This website may contain affiliate links. If you click on an affiliate link and make a purchase, 
+                    This website may contain affiliate links. If you click on an affiliate link and make a purchase,
                     we may receive a commission at no additional cost to you.
                   </p>
                 </div>
 
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mt-8 mb-4">What Are Affiliate Links?</h2>
                 <p className="mb-4">
-                  Affiliate links are special URLs that allow us to earn a small commission when you make a purchase 
-                  through our links. These links help us maintain and improve our website while providing you with 
+                  Affiliate links are special URLs that allow us to earn a small commission when you make a purchase
+                  through our links. These links help us maintain and improve our website while providing you with
                   valuable content and recommendations.
                 </p>
 
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mt-8 mb-4">Our Affiliate Relationships</h2>
                 <p className="mb-4">
-                  TrackScale Blog participates in various affiliate marketing programs, which means we may earn 
+                  PickPoynt participates in various affiliate marketing programs, which means we may earn
                   commissions on purchases made through our links to:
                 </p>
                 <ul className="list-disc pl-6 mb-4">
@@ -90,13 +120,13 @@ export default function AffiliateDisclaimerPage() {
                   <li>Choose not to make any purchases</li>
                 </ul>
                 <p className="mb-4">
-                  We appreciate when you use our links as it helps support our work, but we never want you to feel 
+                  We appreciate when you use our links as it helps support our work, but we never want you to feel
                   pressured to make purchases you don't need or want.
                 </p>
 
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mt-8 mb-4">FTC Compliance</h2>
                 <p className="mb-4">
-                  We comply with the Federal Trade Commission (FTC) guidelines regarding affiliate marketing. 
+                  We comply with the Federal Trade Commission (FTC) guidelines regarding affiliate marketing.
                   This means:
                 </p>
                 <ul className="list-disc pl-6 mb-4">
@@ -108,15 +138,15 @@ export default function AffiliateDisclaimerPage() {
 
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mt-8 mb-4">Questions About Affiliate Links</h2>
                 <p className="mb-4">
-                  If you have any questions about our affiliate relationships or how we use affiliate links, 
-                  please don't hesitate to contact us. We're happy to provide more information about our 
+                  If you have any questions about our affiliate relationships or how we use affiliate links,
+                  please don't hesitate to contact us. We're happy to provide more information about our
                   monetization methods.
                 </p>
 
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mt-8 mb-4">Changes to This Disclaimer</h2>
                 <p className="mb-4">
-                  We may update this affiliate disclaimer from time to time to reflect changes in our 
-                  affiliate relationships or to comply with new regulations. We will notify you of any 
+                  We may update this affiliate disclaimer from time to time to reflect changes in our
+                  affiliate relationships or to comply with new regulations. We will notify you of any
                   significant changes by updating the "Last updated" date at the top of this page.
                 </p>
 
@@ -125,8 +155,8 @@ export default function AffiliateDisclaimerPage() {
                   If you have any questions about this Affiliate Disclaimer, please contact us at:
                 </p>
                 <p className="mb-4">
-                  Email: affiliates@trackscale.com<br />
-                  Address: TrackScale Blog, Affiliate Department
+                  Email: affiliates@pickpoynt.com<br />
+                  Address: PickPoynt, Affiliate Department
                 </p>
 
                 <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mt-8">
@@ -134,9 +164,9 @@ export default function AffiliateDisclaimerPage() {
                     Thank You for Your Support
                   </h3>
                   <p className="text-blue-700 dark:text-blue-300">
-                    We appreciate your trust in our recommendations. When you use our affiliate links, 
-                    you're helping us continue to provide valuable content and resources to the developer 
-                    community. Thank you for supporting TrackScale Blog!
+                    We appreciate your trust in our recommendations. When you use our affiliate links,
+                    you're helping us continue to provide valuable content and resources to the developer
+                    community. Thank you for supporting PickPoynt!
                   </p>
                 </div>
               </div>
@@ -144,7 +174,7 @@ export default function AffiliateDisclaimerPage() {
           </div>
         </div>
       </main>
-      
+
       <BlogFooter />
     </div>
   )
