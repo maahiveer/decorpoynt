@@ -79,6 +79,7 @@ export interface Category {
   name: string
   slug: string
   description?: string
+  parent_id?: string | null
   created_at: string
 }
 
