@@ -8,7 +8,7 @@ interface ArticleSitemap {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tracksatscale.vercel.app'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.pickpoynt.com'
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
