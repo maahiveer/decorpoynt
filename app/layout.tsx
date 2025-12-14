@@ -80,12 +80,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+      <head>
+        <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
@@ -96,6 +92,14 @@ export default function RootLayout({
             `,
           }}
         />
+      </head>
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+      >
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+
       </body>
     </html>
   );
