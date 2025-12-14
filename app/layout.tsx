@@ -86,6 +86,16 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              aclib.runAutoTag({
+                  zoneId: '1hocwjdq4f',
+              });
+            `,
+          }}
+        />
       </body>
     </html>
   );
