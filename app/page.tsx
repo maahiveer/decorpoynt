@@ -181,55 +181,70 @@ export default async function Home({
             </h2>
           </div>
 
+          {/* Newsletter Hero Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="md:col-span-3 relative flex flex-col md:flex-row items-center justify-between p-8 sm:p-12 rounded-xl bg-[#0a0f1c] border border-slate-800 shadow-2xl overflow-hidden group">
+              {/* Background Glow */}
+              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600/20 blur-3xl rounded-full pointer-events-none"></div>
+
+              <div className="flex-1 relative z-10 text-center md:text-left mb-8 md:mb-0">
+                <span className="inline-block py-1 px-3 rounded bg-blue-900/50 text-blue-300 text-xs font-bold tracking-wider mb-4 border border-blue-800">
+                  WEEKLY INSIGHTS
+                </span>
+                <h2 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight mb-4 leading-none">
+                  Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Newsletter</span>
+                </h2>
+                <p className="text-slate-400 text-lg max-w-xl mx-auto md:mx-0 font-medium">
+                  Get exclusive SEO tips, product breakdowns, and digital marketing strategies delivered straight to your inbox.
+                </p>
+              </div>
+
+              <div className="relative z-10 w-full md:w-auto shrink-0 animate-fade-in">
+                <form className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="px-5 py-3.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-full sm:w-72 shadow-inner"
+                  />
+                  <button className="px-8 py-3.5 bg-[#d4f5e0] text-[#0f1f18] font-black uppercase tracking-wide rounded-lg hover:bg-white hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-900/20">
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          {/* Standard Category Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {categories.filter((c: any) => !c.parent_id).map((category: any, index: number) => {
-              // First item is the "Hero" span-3
-              const isHero = index === 0;
-              const spanClass = isHero ? "md:col-span-3" : "col-span-1";
-              const heightClass = isHero ? "min-h-[350px]" : "min-h-[250px]";
-
-              // Image for the Hero section
-              const heroImage = "https://picsum.photos/seed/seo-academy/500/500";
-
+              // Standard card styling for all categories
               return (
                 <Link
                   href={`/categories/${category.slug}`}
                   key={category.id}
-                  className={`relative flex flex-col justify-between p-8 rounded-xl bg-[#0a0f1c] border border-slate-800 hover:border-slate-700 transition-all group ${spanClass} ${heightClass}`}
+                  className="relative flex flex-col justify-between p-8 rounded-xl bg-[#0a0f1c] border border-slate-800 hover:border-slate-700 transition-all group min-h-[250px] hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/10"
                 >
-                  <div className="flex flex-col md:flex-row h-full items-center gap-8">
-                    {/* Hero specific layout */}
-                    {isHero && (
-                      <div className="shrink-0 hidden md:block w-1/3">
-                        <div className="aspect-square rounded-lg overflow-hidden bg-slate-800 relative">
-                          <img src={heroImage} alt={category.name} className="object-cover w-full h-full opacity-90" />
-                        </div>
-                      </div>
-                    )}
+                  <div className="flex flex-col h-full items-center text-center justify-between z-10 relative">
+                    <div className="w-full">
+                      <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-3 group-hover:text-blue-400 transition-colors">
+                        {category.name}
+                      </h3>
+                      {category.description && (
+                        <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2 group-hover:text-slate-400 transition-colors">
+                          {category.description}
+                        </p>
+                      )}
+                    </div>
 
-                    <div className={`flex flex-col ${isHero ? "md:w-2/3 items-start text-left" : "w-full items-center text-center"} h-full justify-between`}>
-                      <div className="w-full">
-                        <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight mb-3">
-                          {category.name}
-                        </h3>
-                        {/* Description mainly for Hero or if available */}
-                        {isHero || category.description ? (
-                          <p className="text-slate-400 text-sm sm:text-base font-medium mb-6 line-clamp-3">
-                            {category.description || "Master this topic with our comprehensive guides, expert reviews, and data-driven insights tailored for your success."}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div className={`mt-auto ${isHero ? "w-auto" : "w-full"}`}>
-                        <span className="inline-block px-8 py-3 bg-[#d4f5e0] text-[#0f1f18] text-sm sm:text-base font-black rounded uppercase tracking-wide hover:bg-white transition-colors">
-                          {isHero ? "Enrol Now for FREE" : (() => {
-                            const nameLower = category.name.toLowerCase();
-                            if (nameLower.includes('tool')) return "TRY NOW!";
-                            if (nameLower.includes('deal') || nameLower.includes('discount')) return "SAVE NOW!";
-                            return "LEARN NOW!";
-                          })()}
-                        </span>
-                      </div>
+                    <div className="w-full mt-auto">
+                      <span className="inline-block px-6 py-2.5 bg-[#d4f5e0] text-[#0f1f18] text-sm font-black rounded uppercase tracking-wide group-hover:bg-white transition-colors w-full sm:w-auto">
+                        {(() => {
+                          const nameLower = category.name.toLowerCase();
+                          if (nameLower.includes('tool')) return "TRY NOW!";
+                          if (nameLower.includes('deal') || nameLower.includes('discount')) return "SAVE NOW!";
+                          return "LEARN NOW!";
+                        })()}
+                      </span>
                     </div>
                   </div>
                 </Link>
