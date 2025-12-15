@@ -53,51 +53,6 @@ export function BlogHeader({ categories }: BlogHeaderProps) {
               Home
             </Link>
 
-            {/* Dynamic Category Links with Dropdowns */}
-            {topLevelCategories.map((category) => {
-              const subcategories = getSubcategories(category.id)
-              const hasSubcategories = subcategories.length > 0
-
-              if (hasSubcategories) {
-                return (
-                  <div key={category.id} className="relative group">
-                    <button className="flex items-center text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors">
-                      <Link href={`/categories/${category.slug}`}>
-                        {category.name}
-                      </Link>
-                      <ChevronDown className="ml-1 h-4 w-4" />
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        {subcategories.map((sub) => (
-                          <Link
-                            key={sub.id}
-                            href={`/categories/${sub.slug}`}
-                            className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
-                            role="menuitem"
-                          >
-                            {sub.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-
-              return (
-                <Link
-                  key={category.id}
-                  href={`/categories/${category.slug}`}
-                  className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
-                >
-                  {category.name}
-                </Link>
-              )
-            })}
-
             <Link
               href="/about"
               className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
@@ -133,38 +88,6 @@ export function BlogHeader({ categories }: BlogHeaderProps) {
               >
                 Home
               </Link>
-
-              {/* Mobile Category Links */}
-              {topLevelCategories.map((category) => {
-                const subcategories = getSubcategories(category.id)
-                const hasSubcategories = subcategories.length > 0
-
-                return (
-                  <div key={category.id} className="space-y-2">
-                    <Link
-                      href={`/categories/${category.slug}`}
-                      className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors px-2 py-1 block"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {category.name}
-                    </Link>
-                    {hasSubcategories && (
-                      <div className="pl-4 space-y-2">
-                        {subcategories.map((sub) => (
-                          <Link
-                            key={sub.id}
-                            href={`/categories/${sub.slug}`}
-                            className="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 transition-colors px-2 py-1 block"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {sub.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
 
               <Link
                 href="/about"
