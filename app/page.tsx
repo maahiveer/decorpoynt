@@ -183,7 +183,7 @@ export default async function Home({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.filter(c => !c.parent_id).map((category, index) => {
+            {categories.filter((c: any) => !c.parent_id).map((category: any, index: number) => {
               // Assign a gradient based on index to variate the look
               const gradients = [
                 'from-blue-500 to-cyan-500',
