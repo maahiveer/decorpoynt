@@ -227,7 +227,7 @@ export default async function Home({
                   <div className="flex flex-col h-full items-center text-center z-10 relative">
                     <div className="w-full flex-1 flex flex-col justify-center">
                       <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-3 group-hover:text-blue-400 transition-colors">
-                        {category.name}
+                        {category.name === "AI" ? "Product Reviews" : category.name}
                       </h3>
                       {category.description && (
                         <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2 group-hover:text-slate-400 transition-colors">
@@ -239,7 +239,8 @@ export default async function Home({
                     <div className="w-full mt-auto pt-4">
                       <span className="inline-block px-6 py-2.5 bg-[#d4f5e0] text-[#0f1f18] text-sm font-black rounded uppercase tracking-wide group-hover:bg-white transition-colors w-full sm:w-auto">
                         {(() => {
-                          const nameLower = category.name.toLowerCase();
+                          const display = category.name === "AI" ? "Product Reviews" : category.name;
+                          const nameLower = display.toLowerCase();
                           if (nameLower.includes('tool')) return "TRY NOW!";
                           if (nameLower.includes('deal') || nameLower.includes('discount')) return "SAVE NOW!";
                           return "LEARN NOW!";

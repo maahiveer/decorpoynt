@@ -16,9 +16,9 @@ export function middleware(request: NextRequest) {
 
   const response = NextResponse.next()
 
-  // Block indexing on Vercel deployment URL
+  // Block indexing on Vercel deployment URL or Admin paths
   const hostname = request.headers.get('host') || ''
-  if (hostname.includes('vercel.app')) {
+  if (hostname.includes('vercel.app') || pathname.startsWith('/admin')) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow')
   }
 
