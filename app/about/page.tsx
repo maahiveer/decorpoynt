@@ -99,7 +99,13 @@ export default async function AboutPage() {
                         Hi, I’m <strong>Advik Narayan</strong>. I created PickPoynt with a single mission: to bring transparency and depth back to online product reviews.
                       </p>
                       <p>
-                        In a digital landscape often crowded with generic summaries and sponsored fluff, I saw a need for a voice that prioritizes the consumer. I've always been the "go-to" person in my circle for tech advice and product recommendations. Whether it was helping a friend choose the right laptop for design work or finding the best smart home setup for my family, I loved digging into the details.
+                        In a digital landscape often crowded with generic summaries and sponsored fluff, I saw a need for a voice that prioritizes the consumer. I've always been the "go-to" person in my circle for tech advice and product recommendations.
+                      </p>
+                      <p>
+                        Beyond reviewing products, I am passionate about <strong>Search Engine Optimization (SEO)</strong>. I write extensive content to help others understand the nuances of digital marketing, organic growth, and how to create content that effectively reaches its audience without compromising on quality.
+                      </p>
+                      <p>
+                        Whether it was helping a friend choose the right laptop for design work or finding the best smart home setup for my family, I loved digging into the details.
                       </p>
                       <p>
                         I realized that if my friends needed this kind of unfiltered guidance, others did too. That's why I built PickPoynt—to be a trusted resource where you can find honest, well-researched, and practical advice.
