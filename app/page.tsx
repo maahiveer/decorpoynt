@@ -222,9 +222,12 @@ export default async function Home({
 
                       <div className={`mt-auto ${isHero ? "w-auto" : "w-full"}`}>
                         <span className="inline-block px-8 py-3 bg-[#d4f5e0] text-[#0f1f18] text-sm sm:text-base font-black rounded uppercase tracking-wide hover:bg-white transition-colors">
-                          {isHero ? "Enrol Now for FREE" : (
-                            index % 2 === 0 ? "TRY NOW!" : "LEARN NOW!"
-                          )}
+                          {isHero ? "Enrol Now for FREE" : (() => {
+                            const nameLower = category.name.toLowerCase();
+                            if (nameLower.includes('tool')) return "TRY NOW!";
+                            if (nameLower.includes('deal') || nameLower.includes('discount')) return "SAVE NOW!";
+                            return "LEARN NOW!";
+                          })()}
                         </span>
                       </div>
                     </div>
