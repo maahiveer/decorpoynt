@@ -186,12 +186,14 @@ export default async function Home({
             {categories.filter((c: any) => !c.parent_id).map((category: any, index: number) => {
               // Assign a gradient based on index to variate the look
               const gradients = [
-                'from-blue-500 to-cyan-500',
-                'from-purple-500 to-pink-500',
-                'from-orange-500 to-red-500',
-                'from-green-500 to-emerald-500',
-                'from-indigo-500 to-purple-500',
-                'from-pink-500 to-rose-500'
+                'bg-gradient-to-br from-blue-600 to-cyan-500',
+                'bg-gradient-to-br from-violet-600 to-purple-500',
+                'bg-gradient-to-br from-orange-500 to-red-500',
+                'bg-gradient-to-br from-emerald-500 to-teal-600',
+                'bg-gradient-to-br from-pink-600 to-rose-500',
+                'bg-gradient-to-br from-indigo-600 to-blue-600',
+                'bg-gradient-to-br from-amber-500 to-orange-600',
+                'bg-gradient-to-br from-fuchsia-600 to-pink-600'
               ];
               const gradient = gradients[index % gradients.length];
 
@@ -199,26 +201,24 @@ export default async function Home({
                 <Link
                   href={`/categories/${category.slug}`}
                   key={category.id}
-                  className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 block aspect-[4/3] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700"
+                  className={`group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 block aspect-[4/3] ${gradient}`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-
+                  {/* Decorative Icon Background - always visible but subtle */}
                   <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
-                    {/* Decorative Icon Background */}
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" className="text-current">
+                    <svg width="150" height="150" viewBox="0 0 24 24" fill="white" className="text-white">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                     </svg>
                   </div>
 
-                  <div className="absolute inset-0 flex flex-col justify-end p-8">
+                  <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-10">
                     <div className="relative z-10">
-                      <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <h3 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight shadow-sm">
                         {category.name}
                       </h3>
-                      <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                      <div className="flex items-center text-white/90 font-bold text-lg opacity-90 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                         <span>Browse Articles</span>
-                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                       </div>
                     </div>
