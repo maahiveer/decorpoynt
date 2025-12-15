@@ -2,6 +2,7 @@ import { BlogHeader } from "@/components/BlogHeader";
 import { BlogHero } from "@/components/BlogHero";
 import { ArticleListSSR } from "@/components/ArticleListSSR";
 import { BlogFooter } from "@/components/BlogFooter";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 import type { Metadata } from "next";
@@ -172,37 +173,60 @@ export default async function Home({
       <main>
         <BlogHero />
 
-        {/* Homepage Content with Banners */}
-        <div className="flex gap-4 lg:gap-6 max-w-[1920px] mx-auto px-3 sm:px-4 lg:px-6">
-          {/* Left Banner */}
-          {leftBanner && (
-            <aside className="hidden xl:block w-64 flex-shrink-0 sticky top-8 self-start">
-              <div
-                className="aspect-[9/16] w-full overflow-hidden rounded-lg shadow-lg"
-                dangerouslySetInnerHTML={{ __html: leftBanner }}
-              />
-            </aside>
-          )}
-
-          {/* Main Content */}
-          <div className="flex-1 min-w-0">
-            <ArticleListSSR
-              articles={articles}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalArticles={totalArticles}
-            />
+        {/* Category Grid Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-4">Explore Topics</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Dive into our comprehensive guides and reviews by category.
+            </p>
           </div>
 
-          {/* Right Banner */}
-          {rightBanner && (
-            <aside className="hidden xl:block w-64 flex-shrink-0 sticky top-8 self-start">
-              <div
-                className="aspect-[9/16] w-full overflow-hidden rounded-lg shadow-lg"
-                dangerouslySetInnerHTML={{ __html: rightBanner }}
-              />
-            </aside>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categories.filter(c => !c.parent_id).map((category, index) => {
+              // Assign a gradient based on index to variate the look
+              const gradients = [
+                'from-blue-500 to-cyan-500',
+                'from-purple-500 to-pink-500',
+                'from-orange-500 to-red-500',
+                'from-green-500 to-emerald-500',
+                'from-indigo-500 to-purple-500',
+                'from-pink-500 to-rose-500'
+              ];
+              const gradient = gradients[index % gradients.length];
+
+              return (
+                <Link
+                  href={`/categories/${category.slug}`}
+                  key={category.id}
+                  className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 block aspect-[4/3] bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+
+                  <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                    {/* Decorative Icon Background */}
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" className="text-current">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    </svg>
+                  </div>
+
+                  <div className="absolute inset-0 flex flex-col justify-end p-8">
+                    <div className="relative z-10">
+                      <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {category.name}
+                      </h3>
+                      <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                        <span>Browse Articles</span>
+                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </main>
       <BlogFooter />
