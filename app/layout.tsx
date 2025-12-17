@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     default: "PickPoynt - Decisions made simple",
     template: "%s | PickPoynt"
   },
+  alternates: {
+    canonical: './',
+  },
   description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights. Decisions made simple.",
   keywords: ["product reviews", "buying guides", "tech reviews", "consumer insights", "software reviews", "best tools", "comparisons"],
   authors: [{ name: "PickPoynt Team" }],

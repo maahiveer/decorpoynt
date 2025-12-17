@@ -3,8 +3,8 @@ import { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
     const host = request.headers.get('host') || ''
 
-    // Block all crawlers on Vercel deployment URL
-    if (host.includes('vercel.app')) {
+    // Block all crawlers on Vercel deployment URLs (duplicate content protection)
+    if (host.endsWith('.vercel.app') && host !== 'pickpoynt.com' && host !== 'www.pickpoynt.com') {
         return new Response(
             `User-agent: *
 Disallow: /`,
@@ -15,6 +15,10 @@ Disallow: /`,
             }
         )
     }
+
+    // Allow crawlers on all domains including Vercel
+
+
 
     // Allow crawlers on custom domain
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://${host}`
