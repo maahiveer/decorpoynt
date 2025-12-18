@@ -12,6 +12,7 @@ interface ArticlePageProps {
 // Force dynamic rendering so newly published articles appear immediately
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true
+export const revalidate = 0 // Disable ISR caching
 
 // Don't pre-generate pages - render on-demand for immediate updates
 export async function generateStaticParams() {
