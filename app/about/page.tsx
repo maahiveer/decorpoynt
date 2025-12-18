@@ -4,8 +4,8 @@ import { Mail, Youtube, Linkedin, Twitter } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export const metadata = {
-  title: 'About Advik Narayan - Pickleball Enthusiast & Founder of PickPoynt',
-  description: 'Meet Advik Narayan, the founder of PickPoynt. A passionate Pickleball player sharing honest reviews, tips, and insights from the local courts.',
+  title: 'About Manish Kumar Jain - Pickleball Enthusiast & Founder of PickPoynt',
+  description: 'Meet Manish Kumar Jain, the founder of PickPoynt. A passionate Pickleball player sharing honest reviews, tips, and insights from the local courts.',
 }
 
 async function getCategories() {
@@ -67,20 +67,20 @@ export default async function AboutPage() {
                   <div className="relative -mt-16 sm:-mt-20 mb-8 flex flex-col sm:flex-row items-center sm:items-end gap-6 text-center sm:text-left">
                     <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full border-4 border-white dark:border-slate-800 shadow-lg overflow-hidden shrink-0 bg-slate-200">
                       <img
-                        src="/about-us-pickleball.png"
-                        alt="Advik Narayan holding a pickleball paddle"
+                        src="/manish-kumar-jain.png"
+                        alt="Manish Kumar Jain"
                         className="h-full w-full object-cover"
                       />
                     </div>
 
                     <div className="pb-2">
-                      <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Advik Narayan</h2>
+                      <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Manish Kumar Jain</h2>
                       <p className="text-blue-600 dark:text-blue-400 font-medium text-lg">Founder & Chief Editor</p>
                     </div>
 
                     <div className="sm:ml-auto pb-4">
                       <a
-                        href="https://www.linkedin.com/in/advik-narayan-5807283b/"
+                        href="https://www.linkedin.com/in/manish-kumar-jain-220177395"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
@@ -96,7 +96,7 @@ export default async function AboutPage() {
                     <div>
                       <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Why I Love Pickleball</h3>
                       <p>
-                        Hi, I’m <strong>Advik Narayan</strong>. My journey with Pickleball started on a whim, but it quickly became an obsession. There's something incredibly addictive about the "pop" of the ball, the fast-paced volleys at the kitchen line, and the community you find at the local courts.
+                        Hi, I’m <strong>Manish Kumar Jain</strong>. My journey with Pickleball started on a whim, but it quickly became an obsession. There's something incredibly addictive about the "pop" of the ball, the fast-paced volleys at the kitchen line, and the community you find at the local courts.
                       </p>
                       <p>
                         I spend my weekends (and let's be honest, quite a few weekday evenings) at the <strong>local courts</strong> here in town, managing our local league and testing out every piece of gear I can get my hands on. Whether it's analyzing the sweet spot on a new carbon fiber paddle or finding shoes that actually last on asphalt, I live for the details.
@@ -132,7 +132,7 @@ export default async function AboutPage() {
                   </a>
 
                   <a
-                    href="https://www.linkedin.com/in/advik-narayan-5807283b/"
+                    href="https://www.linkedin.com/in/manish-kumar-jain-220177395"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 transition-colors shadow-sm text-slate-700 dark:text-slate-300 font-medium"
