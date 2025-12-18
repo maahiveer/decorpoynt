@@ -32,12 +32,12 @@ export async function GET() {
                 articles: {
                     count: articles?.length || 0,
                     error: artError?.message || null,
-                    items: articles?.map(a => ({ title: a.title, status: a.status })) || []
+                    items: articles?.map((a: any) => ({ title: a.title, status: a.status })) || []
                 },
                 categories: {
                     count: categories?.length || 0,
                     error: catError?.message || null,
-                    items: categories?.map(c => c.name) || []
+                    items: categories?.map((c: any) => c.name) || []
                 }
             }
         })
