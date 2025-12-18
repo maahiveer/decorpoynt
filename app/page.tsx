@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { ArrowRight, Star, Shield, Zap, Calendar, Clock, ChevronRight } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { supabase, Article } from '@/lib/supabase'
 
 export const revalidate = 0 // Ensure fresh data on every request
 
-async function getLatestArticles() {
+async function getLatestArticles(): Promise<Article[]> {
   if (!supabase) return []
 
   try {
@@ -20,7 +20,8 @@ async function getLatestArticles() {
       return []
     }
 
-    return articles || []
+    // Cast the response to Article[] since we are selecting a subset of fields
+    return (articles as unknown as Article[]) || []
   } catch (error) {
     console.error('Error:', error)
     return []
