@@ -8,9 +8,7 @@ async function getLatestArticles(): Promise<Article[]> {
   if (!supabase) return []
 
   try {
-    const { data: articles, error } = await supabase
-      .from('articles')
-      .select('id, title, slug, excerpt, featured_image, created_at, tags')
+
     const { data: articles, error } = await supabase
       .from('articles')
       .select('id, title, slug, excerpt, featured_image, created_at, tags')
