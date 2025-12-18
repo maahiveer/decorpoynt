@@ -46,7 +46,7 @@ export default async function Home() {
           PickPoynt&trade;
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-          <Link href="/articles" className="hover:text-white transition-colors">Reviews</Link>
+          <Link href="/articles" className="hover:text-white transition-colors">Articles</Link>
           <Link href="/about" className="hover:text-white transition-colors">About</Link>
           <Link href="mailto:hello@pickpoynt.com" className="hover:text-white transition-colors">Contact</Link>
         </nav>
@@ -67,7 +67,7 @@ export default async function Home() {
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link href="/articles" className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
-            Browse All Reviews <ArrowRight className="w-4 h-4" />
+            Read Latest Articles <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="/about" className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 backdrop-blur text-white font-medium transition-all flex items-center justify-center">
             Our Mission
