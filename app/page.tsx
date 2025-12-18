@@ -78,9 +78,9 @@ export default async function Home() {
       {/* Latest Articles Grid */}
       <section className="container mx-auto px-6 py-20 border-t border-white/5 relative z-10">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl font-bold">Latest Reviews</h2>
+          <h2 className="text-3xl font-bold">Latest Stories</h2>
           <Link href="/articles" className="text-sm text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
-            View archive <ChevronRight className="w-4 h-4" />
+            View all <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
