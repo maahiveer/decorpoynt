@@ -220,6 +220,34 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       "wordCount": article.content.split(' ').length
     }
 
+    // Helper to sanitize/extract body content if it's a full HTML doc
+    const processContent = (html: string) => {
+      if (!html) return '';
+
+      // If content is a full HTML document, extract body contents
+      if (html.toLowerCase().includes('<body')) {
+        const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        if (bodyMatch && bodyMatch[1]) {
+          return bodyMatch[1];
+        }
+      }
+
+      // Fallback: If it starts with html/doctype but regex failed, strip known outer tags
+      if (html.trim().startsWith('<!DOCTYPE') || html.trim().startsWith('<html')) {
+        return html
+          .replace(/<!DOCTYPE[^>]*>/gi, '')
+          .replace(/<html[^>]*>/gi, '')
+          .replace(/<\/html>/gi, '')
+          .replace(/<head>[\s\S]*?<\/head>/gi, '') // Non-greedy match for head
+          .replace(/<body[^>]*>/gi, '')
+          .replace(/<\/body>/gi, '');
+      }
+
+      return html;
+    }
+
+    const finalContent = processContent(article.content);
+
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900">
         {/* Structured Data */}
@@ -235,100 +263,53 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               if (window.location.hash) {
                 window.history.replaceState(null, null, window.location.pathname);
               }
-              
-              // Smooth scroll for sidebar links
-              document.addEventListener('DOMContentLoaded', function() {
-                const sidebarLinks = document.querySelectorAll('.sidebar a');
-                sidebarLinks.forEach(link => {
-                  link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  });
-                });
-                
-                // Active link highlighting
-                window.addEventListener('scroll', () => {
-                  const sections = document.querySelectorAll('section');
-                  const scrollPosition = window.scrollY + 100;
-                  
-                  sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
-                    const sectionId = section.getAttribute('id');
-                    
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                      sidebarLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === '#' + sectionId) {
-                          link.classList.add('active');
-                        }
-                      });
-                    }
-                  });
-                });
-              });
             `
           }}
         />
 
-        {/* Article content - render complete HTML documents in iframe */}
-        <main className="min-h-screen w-full">
-          {article.content.trim().startsWith('<!DOCTYPE') || article.content.trim().startsWith('<html') ? (
-            // Complete HTML document - render in iframe
-            <>
-              {/* Resource hints for faster loading */}
-              <link rel="dns-prefetch" href="https://www.youtube.com" />
-              <link rel="preconnect" href="https://www.youtube.com" crossOrigin="anonymous" />
-              <link rel="dns-prefetch" href="https://i.ytimg.com" />
-
-              <iframe
-                srcDoc={
-                  // Inject mobile viewport meta tag and performance optimizations if not present
-                  article.content.includes('viewport')
-                    ? article.content
-                    : article.content.replace(
-                      /<head>/i,
-                      `<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<style>img{height:auto;max-width:100%;display:block;}iframe[src*="youtube"]{loading:lazy;}</style>`
-                    )
-                }
-                className="w-full min-h-screen border-0"
-                style={{ height: '100vh', width: '100%' }}
-                title="Article Content"
-                loading="lazy"
-              />
-
-              {/* Inject lazy loading into iframe content */}
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    (function(){
-                      const iframe=document.querySelector('iframe[title="Article Content"]');
-                      if(!iframe)return;
-                      iframe.addEventListener('load',function(){
-                        try{
-                          const doc=iframe.contentDocument||iframe.contentWindow?.document;
-                          if(!doc)return;
-                          doc.querySelectorAll('img:not([loading])').forEach(img=>img.loading='lazy');
-                          doc.querySelectorAll('iframe[src*="youtube"]').forEach(v=>v.loading='lazy');
-                        }catch(e){}
-                      });
-                    })();
-                  `
-                }}
-              />
-            </>
-          ) : (
-            // Partial HTML - render normally
-            <div className="article-content">
-              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        {/* Standard Header for Navigation */}
+        <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/95 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-900/95">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/" className="flex items-center">
+                <div className="flex flex-col">
+                  <span className="text-[#1e3a8a] font-bold text-2xl tracking-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                    PickPoynt
+                  </span>
+                </div>
+              </Link>
+              <Link href="/" className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100">
+                Home
+              </Link>
             </div>
-          )}
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+          <article className="prose prose-slate dark:prose-invert max-w-4xl mx-auto">
+            <h1 className="mb-4">{article.title}</h1>
+
+            {/* Metadata row */}
+            <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 mb-8 not-prose">
+              <div className="flex items-center gap-1">
+                <User className="w-4 h-4" /> <span>{article.user_profiles?.full_name || 'PickPoynt Author'}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" /> <span>{formatDate(article.published_at || article.created_at)}</span>
+              </div>
+            </div>
+
+            {article.featured_image && (
+              <div className="mb-8 rounded-xl overflow-hidden shadow-lg not-prose">
+                <img src={article.featured_image} alt={article.title} className="w-full object-cover" />
+              </div>
+            )}
+
+            <div
+              className="article-content"
+              dangerouslySetInnerHTML={{ __html: finalContent }}
+            />
+          </article>
         </main>
       </div>
     )

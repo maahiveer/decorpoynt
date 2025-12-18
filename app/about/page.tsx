@@ -1,11 +1,11 @@
 import { BlogHeader } from '@/components/BlogHeader'
 import { BlogFooter } from '@/components/BlogFooter'
-import { Mail, Youtube, Linkedin, Github, Twitter } from 'lucide-react'
+import { Mail, Youtube, Linkedin, Twitter } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export const metadata = {
-  title: 'About Advik Narayan - Founder of PickPoynt',
-  description: 'Meet Advik Narayan, the founder and chief editor of PickPoynt. Learn about his mission to bring honesty and transparency to product reviews.',
+  title: 'About Advik Narayan - Pickleball Enthusiast & Founder of PickPoynt',
+  description: 'Meet Advik Narayan, the founder of PickPoynt. A passionate Pickleball player sharing honest reviews, tips, and insights from the local courts.',
 }
 
 async function getCategories() {
@@ -49,10 +49,10 @@ export default async function AboutPage() {
             {/* Minimal Header */}
             <div className="text-center mb-16">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-                Real Reviews. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Real Person.</span>
+                Passion for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Pickleball.</span>
               </h1>
               <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                Behind every review on PickPoynt is a commitment to honesty, rigorous testing, and accurate information.
+                Reviews, tips, and strategies born from real hours spent on the court.
               </p>
             </div>
 
@@ -67,8 +67,8 @@ export default async function AboutPage() {
                   <div className="relative -mt-16 sm:-mt-20 mb-8 flex flex-col sm:flex-row items-center sm:items-end gap-6 text-center sm:text-left">
                     <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full border-4 border-white dark:border-slate-800 shadow-lg overflow-hidden shrink-0 bg-slate-200">
                       <img
-                        src="/images/advik-narayan.jpg"
-                        alt="Advik Narayan"
+                        src="/about-us-pickleball.png"
+                        alt="Advik Narayan holding a pickleball paddle"
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -94,47 +94,26 @@ export default async function AboutPage() {
                   {/* Bio Content */}
                   <div className="prose prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-8">
                     <div>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">My Story</h3>
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Why I Love Pickleball</h3>
                       <p>
-                        Hi, I’m <strong>Advik Narayan</strong>. I created PickPoynt with a single mission: to bring transparency and depth back to online product reviews.
+                        Hi, I’m <strong>Advik Narayan</strong>. My journey with Pickleball started on a whim, but it quickly became an obsession. There's something incredibly addictive about the "pop" of the ball, the fast-paced volleys at the kitchen line, and the community you find at the local courts.
                       </p>
                       <p>
-                        In a digital landscape often crowded with generic summaries and sponsored fluff, I saw a need for a voice that prioritizes the consumer. I've always been the "go-to" person in my circle for tech advice and product recommendations.
+                        I spend my weekends (and let's be honest, quite a few weekday evenings) at the <strong>local courts</strong> here in town, managing our local league and testing out every piece of gear I can get my hands on. Whether it's analyzing the sweet spot on a new carbon fiber paddle or finding shoes that actually last on asphalt, I live for the details.
                       </p>
                       <p>
-                        Beyond reviewing products, I am passionate about <strong>Search Engine Optimization (SEO)</strong>. I write extensive content to help others understand the nuances of digital marketing, organic growth, and how to create content that effectively reaches its audience without compromising on quality.
-                      </p>
-                      <p>
-                        Whether it was helping a friend choose the right laptop for design work or finding the best smart home setup for my family, I loved digging into the details.
-                      </p>
-                      <p>
-                        I realized that if my friends needed this kind of unfiltered guidance, others did too. That's why I built PickPoynt—to be a trusted resource where you can find honest, well-researched, and practical advice.
+                        Pickleball isn't just a sport to me; it's a lifestyle. It’s accessible, social, and ridiculously fun. But finding the right gear can be confusing. That's why I started PickPoynt—to share my on-court experiences and help you find the equipment that actually improves your game, without the marketing fluff.
                       </p>
                     </div>
 
                     <div>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">What Drives Me</h3>
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Beyond the Court</h3>
                       <p>
-                        I believe that the best products aren't always the most expensive or the most hyped. They're the ones that solve real problems and fit seamlessly into your life. My approach is simple:
+                        When I'm not drilling my third-shot drop, I'm diving deep into <strong>Search Engine Optimization (SEO)</strong> and digital marketing. I love understanding how people find information online and ensuring that quality content cuts through the noise.
                       </p>
-                      <ul className="grid sm:grid-cols-2 gap-4 mt-4 list-none pl-0">
-                        <li className="flex gap-3 items-start p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                          <span className="text-blue-500 text-xl">✓</span>
-                          <span><strong>Honesty First:</strong> No sponsored bias. Just facts and genuine user experience.</span>
-                        </li>
-                        <li className="flex gap-3 items-start p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                          <span className="text-blue-500 text-xl">✓</span>
-                          <span><strong>Depth & Detail:</strong> Going beyond the spec sheet to understand how things work in the real world.</span>
-                        </li>
-                        <li className="flex gap-3 items-start p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                          <span className="text-blue-500 text-xl">✓</span>
-                          <span><strong>Real Context:</strong> Evaluating products based on who they are actually for.</span>
-                        </li>
-                        <li className="flex gap-3 items-start p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                          <span className="text-blue-500 text-xl">✓</span>
-                          <span><strong>Continuous Learning:</strong> Technology evolves fast, and I stay ahead of the curve so you don't have to.</span>
-                        </li>
-                      </ul>
+                      <p>
+                        My goal with PickPoynt is to combine these passions: creating a resource that is structurally sound, easy to find, and packed with genuine, player-tested advice. Prioritizing the player's needs is my winning strategy.
+                      </p>
                     </div>
                   </div>
                 </div>

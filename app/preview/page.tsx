@@ -62,6 +62,34 @@ export default function PreviewPage() {
     return Math.ceil(wordCount / wordsPerMinute)
   }
 
+  // Helper to sanitize/extract body content if it's a full HTML doc
+  const processContent = (html: string) => {
+    if (!html) return '';
+
+    // If content is a full HTML document, extract body contents
+    if (html.toLowerCase().includes('<body')) {
+      const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      if (bodyMatch && bodyMatch[1]) {
+        return bodyMatch[1];
+      }
+    }
+
+    // Fallback: If it starts with html/doctype but regex failed, strip known outer tags
+    if (html.trim().startsWith('<!DOCTYPE') || html.trim().startsWith('<html')) {
+      return html
+        .replace(/<!DOCTYPE[^>]*>/gi, '')
+        .replace(/<html[^>]*>/gi, '')
+        .replace(/<\/html>/gi, '')
+        .replace(/<head>[\s\S]*?<\/head>/gi, '') // Non-greedy match for head
+        .replace(/<body[^>]*>/gi, '')
+        .replace(/<\/body>/gi, '');
+    }
+
+    return html;
+  }
+
+  const finalContent = processContent(article.content);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <BlogHeader categories={categories} />
@@ -122,7 +150,7 @@ export default function PreviewPage() {
                 </header>
 
                 <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-900 dark:prose-strong:text-slate-100 prose-code:text-slate-900 dark:prose-code:text-slate-100 prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-blockquote:border-slate-300 dark:prose-blockquote:border-slate-600 prose-blockquote:text-slate-700 dark:prose-blockquote:text-slate-300">
-                  <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                  <div dangerouslySetInnerHTML={{ __html: finalContent }} />
                 </div>
               </div>
             </article>

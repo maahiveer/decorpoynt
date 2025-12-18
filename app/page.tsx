@@ -1,260 +1,88 @@
-import { BlogHeader } from "@/components/BlogHeader";
-import { BlogHero } from "@/components/BlogHero";
-import { ArticleListSSR } from "@/components/ArticleListSSR";
-import { BlogFooter } from "@/components/BlogFooter";
-import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import Link from 'next/link'
+import { ArrowRight, Star, Shield, Zap } from 'lucide-react'
 
-import type { Metadata } from "next";
-
-// Force dynamic rendering so newly published articles appear immediately
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.pickpoynt.com';
-const ARTICLES_PER_PAGE = 10;
-
-export const metadata: Metadata = {
-  title: "PickPoynt - Decisions made simple",
-  description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights.",
-  alternates: {
-    canonical: siteUrl,
-  },
-  openGraph: {
-    title: "PickPoynt - Decisions made simple",
-    description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights.",
-    url: siteUrl,
-    siteName: "PickPoynt",
-    type: "website",
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'PickPoynt',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "PickPoynt - Decisions made simple",
-    description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights.",
-    images: ['/og-image.png'],
-  },
-};
-
-async function getCategories() {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co' ||
-    !supabase
-  ) {
-    return []
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('id, name, slug, parent_id')
-      .order('name', { ascending: true })
-
-    if (error) {
-      console.error('Error fetching categories:', error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    return []
-  }
-}
-
-interface SiteSetting {
-  setting_key: string
-  setting_value: string | null
-}
-
-async function getHomepageBanners() {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co' ||
-    !supabase
-  ) {
-    return { leftBanner: null, rightBanner: null }
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('setting_key, setting_value')
-      .in('setting_key', ['homepage_left_banner', 'homepage_right_banner'])
-
-    if (error) {
-      console.error('Error fetching homepage banners:', error)
-      return { leftBanner: null, rightBanner: null }
-    }
-
-    const settings = data as SiteSetting[]
-    const leftBanner = settings?.find(s => s.setting_key === 'homepage_left_banner')?.setting_value || null
-    const rightBanner = settings?.find(s => s.setting_key === 'homepage_right_banner')?.setting_value || null
-
-    return { leftBanner, rightBanner }
-  } catch (error) {
-    console.error('Error fetching homepage banners:', error)
-    return { leftBanner: null, rightBanner: null }
-  }
-}
-
-async function getArticles(page: number = 1) {
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co' ||
-    !supabase
-  ) {
-    return { articles: [], totalArticles: 0 }
-  }
-
-  try {
-    // Get total count
-    const { count } = await supabase
-      .from('articles')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'published')
-
-    const totalArticles = count || 0
-
-    // Get paginated articles
-    const from = (page - 1) * ARTICLES_PER_PAGE
-    const to = from + ARTICLES_PER_PAGE - 1
-
-    const { data, error } = await supabase
-      .from('articles')
-      .select(`
-        *,
-        category:categories(id, name, slug)
-      `)
-      .eq('status', 'published')
-      .order('published_at', { ascending: false, nullsFirst: false })
-      .order('created_at', { ascending: false })
-      .range(from, to)
-
-    if (error) {
-      console.error('Error fetching published articles:', error)
-      return { articles: [], totalArticles: 0 }
-    }
-
-    const filteredArticles = (data || []).filter(
-      (article: any) => !!article.slug && article.slug.trim() !== ''
-    )
-
-    return { articles: filteredArticles, totalArticles }
-  } catch (error) {
-    console.error('Error fetching articles:', error)
-    return { articles: [], totalArticles: 0 }
-  }
-}
-
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>
-}) {
-  const params = await searchParams
-  const currentPage = Number(params.page) || 1
-  const categories = await getCategories()
-  const { articles, totalArticles } = await getArticles(currentPage)
-  const totalPages = Math.ceil(totalArticles / ARTICLES_PER_PAGE)
-  const { leftBanner, rightBanner } = await getHomepageBanners()
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      <BlogHeader categories={categories} />
-      <main>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 relative overflow-hidden bg-[#030014]">
+      {/* Background Gradient Blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-900/20 blur-[120px]" />
+      </div>
 
+      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex text-white">
+        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-white/10 bg-black/20 backdrop-blur-md pb-6 pt-8 lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-white/5 lg:p-4 hover:bg-white/10 transition-colors cursor-default">
+          PickPoynt&trade;
+        </p>
+        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-black via-black/50 to-transparent lg:static lg:h-auto lg:w-auto lg:bg-none">
+          <Link
+            className="flex place-items-center gap-2 p-8 lg:p-0 font-bold hover:text-purple-400 transition-colors"
+            href="/about"
+          >
+            About Us
+          </Link>
+        </div>
+      </div>
 
-        {/* Category Grid - "WordsAtScale" Style */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-slate-50 mb-2 uppercase tracking-wide">
-              Start Exploring
-            </h2>
-          </div>
+      <div className="relative flex flex-col place-items-center z-[1]">
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 text-white">
+            Decisions made <span className="text-gradient">simple</span>.
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Your ultimate destination for unbiased reviews, comprehensive buying guides, and data-driven insights.
+          </p>
 
-          {/* Newsletter Hero Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="md:col-span-3 relative flex flex-col md:flex-row items-center justify-between p-8 sm:p-12 rounded-xl bg-[#0a0f1c] border border-slate-800 shadow-2xl overflow-hidden group">
-              {/* Background Glow */}
-              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600/20 blur-3xl rounded-full pointer-events-none"></div>
-
-              <div className="flex-1 relative z-10 text-center md:text-left mb-8 md:mb-0">
-                <span className="inline-block py-1 px-3 rounded bg-blue-900/50 text-blue-300 text-xs font-bold tracking-wider mb-4 border border-blue-800">
-                  WEEKLY INSIGHTS
-                </span>
-                <h2 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight mb-4 leading-none">
-                  Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Newsletter</span>
-                </h2>
-                <p className="text-slate-400 text-lg max-w-xl mx-auto md:mx-0 font-medium">
-                  Get exclusive SEO tips, product breakdowns, and digital marketing strategies delivered straight to your inbox.
-                </p>
-              </div>
-
-              <div className="relative z-10 w-full md:w-auto shrink-0 animate-fade-in">
-                <form className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="px-5 py-3.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-full sm:w-72 shadow-inner"
-                  />
-                  <button className="px-8 py-3.5 bg-[#d4f5e0] text-[#0f1f18] font-black uppercase tracking-wide rounded-lg hover:bg-white hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-900/20">
-                    Subscribe
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          {/* Standard Category Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {categories.filter((c: any) => !c.parent_id).map((category: any, index: number) => {
-              // Standard card styling for all categories
-              return (
-                <Link
-                  href={`/categories/${category.slug}`}
-                  key={category.id}
-                  className="relative flex flex-col justify-between p-8 rounded-xl bg-[#0a0f1c] border border-slate-800 hover:border-slate-700 transition-all group min-h-[250px] hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/10"
-                >
-                  <div className="flex flex-col h-full items-center text-center z-10 relative">
-                    <div className="w-full flex-1 flex flex-col justify-center">
-                      <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-3 group-hover:text-blue-400 transition-colors">
-                        {category.name === "AI" ? "Product Reviews" : category.name}
-                      </h3>
-                      {category.description && (
-                        <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2 group-hover:text-slate-400 transition-colors">
-                          {category.description}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="w-full mt-auto pt-4">
-                      <span className="inline-block px-6 py-2.5 bg-[#d4f5e0] text-[#0f1f18] text-sm font-black rounded uppercase tracking-wide group-hover:bg-white transition-colors w-full sm:w-auto">
-                        {(() => {
-                          const display = category.name === "AI" ? "Product Reviews" : category.name;
-                          const nameLower = display.toLowerCase();
-                          if (nameLower.includes('tool')) return "TRY NOW!";
-                          if (nameLower.includes('deal') || nameLower.includes('discount')) return "SAVE NOW!";
-                          return "LEARN NOW!";
-                        })()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <Link href="/articles" className="px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-white font-medium">
+              Browse Reviews <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link href="/categories" className="px-8 py-4 rounded-full bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 transition-all text-gray-300 hover:text-white">
+              View Categories
+            </Link>
           </div>
         </div>
-      </main>
-      <BlogFooter />
-    </div>
-  );
+      </div>
+
+      <div className="grid text-center lg:max-w-6xl lg:w-full lg:grid-cols-3 lg:text-left gap-8 mt-20 lg:mt-0">
+
+        <div className="group rounded-2xl border border-white/5 bg-white/5 px-8 py-8 transition-all hover:border-purple-500/50 hover:bg-purple-500/10 hover:-translate-y-1">
+          <div className="mb-4 inline-block p-4 rounded-xl bg-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform">
+            <Star className="w-8 h-8" />
+          </div>
+          <h2 className={`mb-3 text-2xl font-bold text-white`}>
+            Expert Reviews
+          </h2>
+          <p className={`m-0 max-w-[30ch] text-base text-gray-400`}>
+            In-depth analysis from industry experts ensuring you get the full picture.
+          </p>
+        </div>
+
+        <div className="group rounded-2xl border border-white/5 bg-white/5 px-8 py-8 transition-all hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:-translate-y-1">
+          <div className="mb-4 inline-block p-4 rounded-xl bg-cyan-500/20 text-cyan-400 group-hover:scale-110 transition-transform">
+            <Zap className="w-8 h-8" />
+          </div>
+          <h2 className={`mb-3 text-2xl font-bold text-white`}>
+            Data Driven
+          </h2>
+          <p className={`m-0 max-w-[30ch] text-base text-gray-400`}>
+            We back our verdicts with hard data, benchmarks, and real-world testing.
+          </p>
+        </div>
+
+        <div className="group rounded-2xl border border-white/5 bg-white/5 px-8 py-8 transition-all hover:border-pink-500/50 hover:bg-pink-500/10 hover:-translate-y-1">
+          <div className="mb-4 inline-block p-4 rounded-xl bg-pink-500/20 text-pink-400 group-hover:scale-110 transition-transform">
+            <Shield className="w-8 h-8" />
+          </div>
+          <h2 className={`mb-3 text-2xl font-bold text-white`}>
+            Unbiased
+          </h2>
+          <p className={`m-0 max-w-[30ch] text-base text-gray-400`}>
+            100% independent. We work for you, not the brands. No paid placements.
+          </p>
+        </div>
+
+      </div>
+    </main>
+  )
 }

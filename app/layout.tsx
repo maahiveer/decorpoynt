@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: './',
   },
-  description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights. Decisions made simple.",
-  keywords: ["product reviews", "buying guides", "tech reviews", "consumer insights", "software reviews", "best tools", "comparisons"],
+  description: "Make informed purchasing decisions with PickPoynt's comprehensive product reviews, buying guides, and consumer insights.",
+  keywords: ["product reviews", "buying guides", "tech reviews", "consumer insights"],
   authors: [{ name: "PickPoynt Team" }],
   creator: "PickPoynt",
   publisher: "PickPoynt",
@@ -63,9 +63,6 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
     creator: '@pickpoynt',
   },
-  verification: {
-    google: "IH5cbk_KMXHppDi6kniuT3Q_zQdvrIVEBW_qWkyDPWw",
-  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -83,32 +80,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              aclib.runAutoTag({
-                  zoneId: '1hocwjdq4f',
-              });
-            `,
-          }}
-        />
-      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(s){s.dataset.zone='10327495',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`
-          }}
-        />
-
         <AuthProvider>
           {children}
         </AuthProvider>
-
       </body>
     </html>
   );
