@@ -107,12 +107,12 @@ export default async function AboutPage() {
                     </div>
 
                     <div>
-                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Beyond the Court</h3>
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white">The PickPoynt Mission</h3>
                       <p>
-                        When I'm not drilling my third-shot drop, I'm diving deep into <strong>Search Engine Optimization (SEO)</strong> and digital marketing. I love understanding how people find information online and ensuring that quality content cuts through the noise.
+                        My mission with PickPoynt is simple: to create a resource that is packed with genuine, player-tested advice. I believe that the best gear isn't always the most expensive—it's what works best for your game.
                       </p>
                       <p>
-                        My goal with PickPoynt is to combine these passions: creating a resource that is structurally sound, easy to find, and packed with genuine, player-tested advice. Prioritizing the player's needs is my winning strategy.
+                        Every review on this site comes from real-world testing. Whether I'm analyzing paddle surfaces or durability, my goal is to give you the honest information you need to make the right choice.
                       </p>
                     </div>
                   </div>
