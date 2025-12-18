@@ -56,13 +56,13 @@ export default async function Home() {
       <div className="container mx-auto px-6 pt-12 pb-12 md:pt-20 md:pb-16 relative z-10 flex flex-col items-center text-center">
 
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-          Decisions made <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">simple</span>.
+          Elevate your <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">game</span>.
         </h1>
 
         <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Unbiased reviews, data-driven comparisons, and real-world testing.
-          We dive deep so you don't have to.
+          Genuine advice, gear insights, and stories from the court.
+          For players, by players.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -128,7 +128,7 @@ export default async function Home() {
                   </h3>
 
                   <p className="text-gray-400 text-sm mb-6 line-clamp-3">
-                    {article.excerpt || "Click to read the full unbiased review and analysis..."}
+                    {article.excerpt || "Click to read the full story..."}
                   </p>
 
                   <div className="mt-auto flex items-center text-xs text-gray-500 gap-4 pt-4 border-t border-white/5">
@@ -149,8 +149,8 @@ export default async function Home() {
           </div>
         ) : (
           <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
-            <h3 className="text-xl font-medium text-gray-300 mb-2">No reviews published yet</h3>
-            <p className="text-gray-500">Check back soon for our latest in-depth analysis.</p>
+            <h3 className="text-xl font-medium text-gray-300 mb-2">No stories published yet</h3>
+            <p className="text-gray-500">Check back soon for our latest updates.</p>
           </div>
         )}
       </section>
