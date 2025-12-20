@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { 
-  Bold, 
-  Italic, 
-  Underline, 
-  List, 
-  ListOrdered, 
-  Quote, 
-  Code, 
+import {
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  Quote,
+  Code,
   Link,
   Image,
   AlignLeft,
@@ -48,9 +48,9 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
     const newValue = value.substring(0, start) + text + value.substring(end)
-    
+
     onChange(newValue)
-    
+
     // Set cursor position after inserted text
     setTimeout(() => {
       textarea.focus()
@@ -66,9 +66,9 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
     const end = textarea.selectionEnd
     const selectedText = value.substring(start, end)
     const newValue = value.substring(0, start) + html.replace('{{content}}', selectedText || 'Your text here') + value.substring(end)
-    
+
     onChange(newValue)
-    
+
     // Set cursor position after inserted HTML
     setTimeout(() => {
       textarea.focus()
@@ -84,23 +84,10 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
     reader.onload = (e) => {
       const content = e.target?.result as string
       if (content) {
-        // Automatically fix the HTML when uploading
-        let fixedContent = content
-        
-        // Remove DOCTYPE, html, head, body tags if present
-        fixedContent = fixedContent.replace(/<!DOCTYPE[^>]*>/gi, '')
-        fixedContent = fixedContent.replace(/<html[^>]*>/gi, '')
-        fixedContent = fixedContent.replace(/<\/html>/gi, '')
-        fixedContent = fixedContent.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
-        fixedContent = fixedContent.replace(/<body[^>]*>/gi, '')
-        fixedContent = fixedContent.replace(/<\/body>/gi, '')
-        
-        // Wrap content in article-content div if not already wrapped
-        if (!fixedContent.includes('class="article-content"') && !fixedContent.includes("class='article-content'")) {
-          fixedContent = `<div class="article-content">\n${fixedContent}\n</div>`
-        }
-        
-        onChange(fixedContent)
+        // Use the content exactly as it is from the file
+        let rawContent = content
+
+        onChange(rawContent)
       }
     }
     reader.readAsText(file)
@@ -140,46 +127,35 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
     <h2>Conclusion</h2>
     <p>Wrap up your article with a conclusion.</p>
 </div>`
-    
+
     onChange(completeHTML)
   }
 
   const fixEmbeddedHTML = () => {
     let fixedHTML = value
-    
-    // Remove DOCTYPE, html, head, body tags if present
-    fixedHTML = fixedHTML.replace(/<!DOCTYPE[^>]*>/gi, '')
-    fixedHTML = fixedHTML.replace(/<html[^>]*>/gi, '')
-    fixedHTML = fixedHTML.replace(/<\/html>/gi, '')
-    fixedHTML = fixedHTML.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
-    fixedHTML = fixedHTML.replace(/<body[^>]*>/gi, '')
-    fixedHTML = fixedHTML.replace(/<\/body>/gi, '')
-    
-    // Wrap content in article-content div if not already wrapped
-    if (!fixedHTML.includes('class="article-content"') && !fixedHTML.includes("class='article-content'")) {
-      fixedHTML = `<div class="article-content">\n${fixedHTML}\n</div>`
-    }
-    
-    // Fix any problematic layout CSS
+
+    // Fix any problematic layout CSS that might break our site shell, 
+    // but keep structural tags if the user deliberately wants a full doc.
+
     fixedHTML = fixedHTML.replace(/\.container\s*{[^}]*display:\s*flex[^}]*}/gi, '')
     fixedHTML = fixedHTML.replace(/\.container\s*{[^}]*}/gi, '')
     fixedHTML = fixedHTML.replace(/\.sidebar\s*{[^}]*}/gi, '')
     fixedHTML = fixedHTML.replace(/\.main-content\s*{[^}]*}/gi, '')
-    
+
     // Remove any existing flexbox layout styles
     fixedHTML = fixedHTML.replace(/display:\s*flex[^;]*;/gi, '')
     fixedHTML = fixedHTML.replace(/flex-direction:\s*[^;]*;/gi, '')
     fixedHTML = fixedHTML.replace(/flex:\s*[^;]*;/gi, '')
-    
+
     onChange(fixedHTML)
   }
 
-  const ToolbarButton = ({ 
-    onClick, 
-    icon: Icon, 
-    isActive = false, 
-    title 
-  }: { 
+  const ToolbarButton = ({
+    onClick,
+    icon: Icon,
+    isActive = false,
+    title
+  }: {
     onClick: () => void
     icon: any
     isActive?: boolean
@@ -189,9 +165,8 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
       type="button"
       onClick={onClick}
       title={title}
-      className={`p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
-        isActive ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400'
-      }`}
+      className={`p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${isActive ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400'
+        }`}
     >
       <Icon className="h-4 w-4" />
     </button>
@@ -213,7 +188,7 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
           title="Fix Layout Issues (Remove problematic CSS)"
         />
         <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1" />
-        
+
         {/* File Operations */}
         <label className="p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-400 cursor-pointer" title="Upload HTML File">
           <Upload className="h-4 w-4" />
@@ -230,7 +205,7 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
           title="Download as HTML"
         />
         <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1" />
-        
+
         {/* Preview Toggle */}
         <ToolbarButton
           onClick={() => setIsPreviewMode(!isPreviewMode)}
@@ -239,7 +214,7 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
           title={isPreviewMode ? "Exit Preview" : "Preview HTML"}
         />
         <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1" />
-        
+
         {/* Basic Formatting */}
         <ToolbarButton
           onClick={() => insertHTML('<h1>{{content}}</h1>')}
@@ -304,7 +279,7 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
       {/* Content Area */}
       {isPreviewMode ? (
         <div className="w-full h-96 p-4 border-0 bg-white dark:bg-slate-900 overflow-auto" style={{ minHeight: '350px' }}>
-          <div 
+          <div
             dangerouslySetInnerHTML={{ __html: value }}
             className="prose prose-lg max-w-none"
           />
@@ -319,10 +294,10 @@ export function RichTextEditor({ value, onChange, placeholder = 'Write your arti
           style={{ minHeight: '350px' }}
         />
       )}
-      
+
       {/* Help text */}
       <div className="px-4 py-2 bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700">
-        💡 <strong>Tips:</strong> 
+        💡 <strong>Tips:</strong>
         <br />• Use "Insert Complete HTML Template" for new articles with proper layout
         <br />• Use "Fix Layout Issues" if you paste HTML with layout problems (removes DOCTYPE, head, body tags and problematic CSS)
         <br />• Use preview mode to see how your HTML will look when rendered

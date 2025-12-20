@@ -1,15 +1,22 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { isDeleted } from '@/lib/deleted-articles'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const response = NextResponse.next()
 
-  // 1. SPAM PROTECTION & CLEANUP (User Request)
-  // Force 410 Gone for known spam remnants to tell Google they are gone forever.
-  const spamKeywords = ['billionaire', 'brainwave', 'parasite']
-  if (spamKeywords.some(keyword => pathname.toLowerCase().includes(keyword))) {
-    return new NextResponse('Gone', { status: 410, statusText: 'Gone' })
+  // 1. DELETED CONTENT - Return 410 Gone
+  // Check if this URL is a deleted article and return 410 status
+  if (isDeleted(pathname)) {
+    return new NextResponse('Gone - This content has been permanently removed', {
+      status: 410,
+      statusText: 'Gone',
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    })
   }
 
   // Block indexing on *.vercel.app domains to prevent duplicate content

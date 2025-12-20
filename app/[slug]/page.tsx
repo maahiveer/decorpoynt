@@ -221,52 +221,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       "wordCount": article.content.split(' ').length
     }
 
-    // Helper to sanitize/extract body content if it's a full HTML doc
-    const processContent = (html: string) => {
-      if (!html) return '';
-
-      // If content is a full HTML document, extract body contents
-      if (html.toLowerCase().includes('<body')) {
-        const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-        if (bodyMatch && bodyMatch[1]) {
-          return bodyMatch[1];
-        }
-      }
-
-      // Fallback: If it starts with html/doctype but regex failed, strip known outer tags
-      if (html.trim().startsWith('<!DOCTYPE') || html.trim().startsWith('<html')) {
-        return html
-          .replace(/<!DOCTYPE[^>]*>/gi, '')
-          .replace(/<html[^>]*>/gi, '')
-          .replace(/<\/html>/gi, '')
-          .replace(/<head>[\s\S]*?<\/head>/gi, '') // Non-greedy match for head
-          .replace(/<body[^>]*>/gi, '')
-          .replace(/<\/body>/gi, '');
-      }
-
-      return html;
-    }
-
-    const finalContent = processContent(article.content);
+    // Display the content exactly as it is in the database
+    const finalContent = article.content;
 
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-900">
+      <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        {/* Remove hash from URL and add sidebar functionality */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (window.location.hash) {
-                window.history.replaceState(null, null, window.location.pathname);
-              }
-            `
-          }}
-        />
 
         {/* Standard Header for Navigation */}
         <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/95 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-900/95">
@@ -287,8 +252,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </header>
 
         <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <article className="prose prose-slate dark:prose-invert max-w-4xl mx-auto">
-            <h1 className="mb-4">{article.title}</h1>
+          <article className="prose prose-slate dark:prose-invert max-w-4xl mx-auto prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-900 dark:prose-strong:text-slate-100">
 
             {/* Metadata row */}
             <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 mb-8 not-prose">

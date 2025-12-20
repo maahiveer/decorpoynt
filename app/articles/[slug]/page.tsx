@@ -146,7 +146,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -180,14 +180,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </header>
 
+    // Display the content exactly as it is in the database
+      const finalContent = article.content;
+
       <main className="py-8">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <article className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden max-w-4xl mx-auto">
             {/* Article Header */}
             <div className="p-8 border-b border-slate-200 dark:border-slate-700">
-              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-                {article.title}
-              </h1>
               <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
@@ -215,8 +215,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             )}
 
-            <div className="article-content p-8 prose prose-slate dark:prose-invert max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div className="article-content p-8 prose prose-slate dark:prose-invert max-w-none prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-900 dark:prose-strong:text-slate-100">
+              <div dangerouslySetInnerHTML={{ __html: finalContent }} />
             </div>
           </article>
         </div>
