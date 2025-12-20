@@ -145,6 +145,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "wordCount": article.content.split(' ').length
   }
 
+  // Display the content exactly as it is in the database
+  const finalContent = article.content;
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       {/* Structured Data */}
@@ -179,9 +182,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </div>
       </header>
-
-    // Display the content exactly as it is in the database
-      const finalContent = article.content;
 
       <main className="py-8">
         <div className="w-full px-4 sm:px-6 lg:px-8">
