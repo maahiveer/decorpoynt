@@ -251,30 +251,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <article className="prose prose-slate dark:prose-invert max-w-4xl mx-auto prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-900 dark:prose-strong:text-slate-100">
-
-            {/* Metadata row */}
-            <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 mb-8 not-prose">
-              <div className="flex items-center gap-1">
-                <User className="w-4 h-4" /> <span>{article.user_profiles?.full_name || 'PickPoynt Author'}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" /> <span>{formatDate(article.published_at || article.created_at)}</span>
-              </div>
-            </div>
-
-            {article.featured_image && (
-              <div className="mb-8 rounded-xl overflow-hidden shadow-lg not-prose">
-                <img src={article.featured_image} alt={article.title} className="w-full object-cover" />
-              </div>
-            )}
+        <main className="w-full p-0 m-0">
+        <div className="w-full p-0 m-0">
+          <article className="bg-white dark:bg-slate-800 w-full max-w-none p-0 m-0">
 
             <div
-              className="article-content"
+              className="article-content w-full prose prose-slate dark:prose-invert max-w-none"
               dangerouslySetInnerHTML={{ __html: finalContent }}
             />
           </article>
+        </div>
         </main>
       </div>
     )
@@ -282,3 +268,4 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound()
   }
 }
+```

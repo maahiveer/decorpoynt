@@ -183,39 +183,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </header>
 
-      <main className="py-8">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <article className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden max-w-4xl mx-auto">
-            {/* Article Header */}
-            <div className="p-8 border-b border-slate-200 dark:border-slate-700">
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-                <div className="flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  <span>{article.user_profiles?.full_name || 'PickPoynt Author'}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formatDate(article.published_at || article.created_at)}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>{getReadingTime(article.content)} min read</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Featured Image */}
-            {article.featured_image && (
-              <div className="w-full h-64 md:h-96 relative">
-                <img
-                  src={article.featured_image}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-
-            <div className="article-content p-8 prose prose-slate dark:prose-invert max-w-none prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-900 dark:prose-strong:text-slate-100">
+      <main className="w-full p-0 m-0">
+        <div className="w-full p-0 m-0">
+          <article className="bg-white dark:bg-slate-800 w-full max-w-none p-0 m-0">
+            <div className="article-content w-full prose prose-slate dark:prose-invert max-w-none">
               <div dangerouslySetInnerHTML={{ __html: finalContent }} />
             </div>
           </article>
