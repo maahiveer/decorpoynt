@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Feature List</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f9fafb;
+        }
+
+        .feature-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            color: #111;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .feature-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px border #f3f4f6;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #2563eb;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .feature-description {
+            color: #4b5563;
+        }
+
+        .tech-stack {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="feature-container">
+        <h1>Product Features</h1>
+
+        <div class="feature-item">
+            <span class="feature-title">1. Next.js 15 App Router Architecture</span>
+            <p class="feature-description">Built with the latest Next.js 15 framework, utilizing Server Components for
+                maximum performance and client-side interactivity only where needed.</p>
+            <span class="tech-stack">Frontend</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">2. Supabase Real-time Backend</span>
+            <p class="feature-description">Fully integrated with Supabase for PostgreSQL database management,
+                authentication, and secure row-level security (RLS).</p>
+            <span class="tech-stack">Backend</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">3. Advanced Rich Text Editor</span>
+            <p class="feature-description">A custom-built editor supporting complex HTML layouts, image embeds, and
+                seamless content creation for long-form articles.</p>
+            <span class="tech-stack">CMS</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">4. Professional SEO Management</span>
+            <p class="feature-description">Automatic generation of sitemaps, robots.txt, and dynamic meta tags
+                (OpenGraph, Twitter Cards) for every article.</p>
+            <span class="tech-stack">SEO</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">5. "410 Gone" Middleware</span>
+            <p class="feature-description">A specialized SEO feature that handles deleted content by returning a 410
+                status code, preventing search engine indexing of removed pages.</p>
+            <span class="tech-stack">SEO / DevOps</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">6. Dynamic Categorization System</span>
+            <p class="feature-description">Support for nested categories and slug-based routing, allowing for clean URL
+                structures like /category/my-article.</p>
+            <span class="tech-stack">Architecture</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">7. Edge-to-Edge Article Layout</span>
+            <p class="feature-description">A premium reading experience with full-viewport width layouts for articles,
+                removing distracting sidebars and containers.</p>
+            <span class="tech-stack">UI/UX</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">8. No-Cache Hierarchy</span>
+            <p class="feature-description">Custom headers implementation to ensure content updates are visible instantly
+                across all browsers and CDNs upon publishing.</p>
+            <span class="tech-stack">Performance</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">9. Multi-Role Admin Panel</span>
+            <p class="feature-description">A dedicated admin dashboard for managing articles, categories, and site
+                settings with secure login.</p>
+            <span class="tech-stack">Admin</span>
+        </div>
+
+        <div class="feature-item">
+            <span class="feature-title">10. Image Optimization & Storage</span>
+            <p class="feature-description">Integration with Supabase Storage and Next.js Image component for
+                ultra-optimized asset delivery.</p>
+            <span class="tech-stack">Media</span>
+        </div>
+    </div>
+</body>
+
+</html>

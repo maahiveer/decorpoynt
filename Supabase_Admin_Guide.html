@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Admin Panel Setup Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --code-bg: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .step {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .sql-highlight {
+            color: #fbbf24;
+        }
+
+        .important {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .step { break-inside: avoid; border: 1px solid #ddd; background: white; color: black; box-shadow: none; }
+            h1, h2 { color: black; -webkit-text-fill-color: black; }
+            pre { background: #f8f8f8; color: black; border: 1px solid #ddd; }
+            code { color: black; }
+            .important { background: #f0f7ff; border-left: 4px solid #000; }
+            .footer { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Admin Panel Setup Guide</h1>
+            <p class="subtitle">Complete step-by-step implementation with Supabase & Next.js</p>
+        </header>
+
+        <!-- Step 1 -->
+        <div class="step">
+            <div class="step-number">Step 1</div>
+            <h2>Initialize Supabase Project</h2>
+            <p>Go to <a href="https://supabase.com" style="color: var(--primary)">supabase.com</a> and create a new project. Once created, navigate to <strong>Project Settings > API</strong> to find your project credentials.</p>
+            <div class="important">
+                Capture the <strong>Project URL</strong> and <strong>anon public key</strong>. You will need these for your environment variables.
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step">
+            <div class="step-number">Step 2</div>
+            <h2>Database Schema Setup</h2>
+            <p>Open the <strong>SQL Editor</strong> in your Supabase dashboard and run the following script to create your articles table and enable security.</p>
+            <pre><code><span class="sql-highlight">CREATE TABLE</span> articles (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  content TEXT,
+  status TEXT DEFAULT 'draft',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+<span class="sql-highlight">ALTER TABLE</span> articles ENABLE ROW LEVEL SECURITY;
+
+<span class="sql-highlight">CREATE POLICY</span> "Allow public read" ON articles FOR SELECT USING (true);
+<span class="sql-highlight">CREATE POLICY</span> "Allow admin manage" ON articles FOR ALL TO authenticated USING (true);</code></pre>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+            <div class="step-number">Step 3</div>
+            <h2>Configure Environment Variables</h2>
+            <p>Create a <code>.env.local</code> file in your project root and add your Supabase credentials.</p>
+            <pre><code>NEXT_PUBLIC_SUPABASE_URL=your-project-url.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key</code></pre>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+            <div class="step-number">Step 4</div>
+            <h2>Create Supabase Client Library</h2>
+            <p>Initialize the Supabase client to interact with your database from the frontend.</p>
+            <pre><code>import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)</code></pre>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step">
+            <div class="step-number">Step 5</div>
+            <h2>Implement Auth Provider</h2>
+            <p>Wrap your application in an AuthProvider to manage login state easily across all admin pages.</p>
+            <pre><code>import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return (
+    &lt;AuthContext.Provider value={{ user }}&gt;
+      {children}
+    &lt;/AuthContext.Provider&gt;
+  )
+}</code></pre>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step">
+            <div class="step-number">Step 6</div>
+            <h2>Build the Admin Article List</h2>
+            <p>Create a dashboard page that fetches all articles from your table.</p>
+            <pre><code>async function fetchArticles() {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .order('created_at', { ascending: false })
+    
+  if (data) setArticles(data)
+}</code></pre>
+        </div>
+
+        <div class="footer">
+            <p>Generated by Antigravity AI &bull; 2025</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">To save as PDF: Press <strong>Ctrl + P</strong> (Cmd + P on Mac) and select "Save as PDF".</p>
+        </div>
+    </div>
+</body>
+</html>
