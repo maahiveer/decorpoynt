@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Star, Shield, Zap, Calendar, Clock, ChevronRight } from 'lucide-react'
+import { ArrowRight, Star, Shield, Zap, Calendar, Clock, ChevronRight, UtensilsCrossed, Cookie, Salad, Pizza, Coffee, Soup, Cake, Leaf } from 'lucide-react'
 import { supabase, Article } from '@/lib/supabase'
 
 export const revalidate = 0 // Ensure fresh data on every request
@@ -73,6 +73,122 @@ export default async function Home() {
           </Link>
         </div>
       </div>
+
+      {/* Recipe Categories Section */}
+      <section className="container mx-auto px-6 py-16 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Discover delicious recipes organized by cuisine and meal type
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {/* Italian */}
+          <Link
+            href="/categories/italian"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-600/20 to-red-600/20 border border-white/10 hover:border-green-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Pizza className="w-10 h-10 md:w-12 md:h-12 mb-3 text-green-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Italian</h3>
+              <p className="text-xs md:text-sm text-gray-400">Pasta, Pizza & More</p>
+            </div>
+          </Link>
+
+          {/* Asian */}
+          <Link
+            href="/categories/asian"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-600/20 to-yellow-600/20 border border-white/10 hover:border-orange-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <UtensilsCrossed className="w-10 h-10 md:w-12 md:h-12 mb-3 text-orange-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Asian</h3>
+              <p className="text-xs md:text-sm text-gray-400">Stir-fry, Sushi & More</p>
+            </div>
+          </Link>
+
+          {/* Desserts */}
+          <Link
+            href="/categories/desserts"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-600/20 to-purple-600/20 border border-white/10 hover:border-pink-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Cake className="w-10 h-10 md:w-12 md:h-12 mb-3 text-pink-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Desserts</h3>
+              <p className="text-xs md:text-sm text-gray-400">Cakes, Cookies & Sweets</p>
+            </div>
+          </Link>
+
+          {/* Breakfast */}
+          <Link
+            href="/categories/breakfast"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-600/20 border border-white/10 hover:border-amber-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Coffee className="w-10 h-10 md:w-12 md:h-12 mb-3 text-amber-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Breakfast</h3>
+              <p className="text-xs md:text-sm text-gray-400">Start Your Day Right</p>
+            </div>
+          </Link>
+
+          {/* Healthy */}
+          <Link
+            href="/categories/healthy"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600/20 to-teal-600/20 border border-white/10 hover:border-emerald-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Salad className="w-10 h-10 md:w-12 md:h-12 mb-3 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Healthy</h3>
+              <p className="text-xs md:text-sm text-gray-400">Nutritious & Delicious</p>
+            </div>
+          </Link>
+
+          {/* Vegan */}
+          <Link
+            href="/categories/vegan"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-lime-600/20 to-green-600/20 border border-white/10 hover:border-lime-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-lime-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-lime-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Leaf className="w-10 h-10 md:w-12 md:h-12 mb-3 text-lime-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Vegan</h3>
+              <p className="text-xs md:text-sm text-gray-400">Plant-Based Goodness</p>
+            </div>
+          </Link>
+
+          {/* Quick Meals */}
+          <Link
+            href="/categories/quick-meals"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border border-white/10 hover:border-blue-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Clock className="w-10 h-10 md:w-12 md:h-12 mb-3 text-blue-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Quick Meals</h3>
+              <p className="text-xs md:text-sm text-gray-400">30 Minutes or Less</p>
+            </div>
+          </Link>
+
+          {/* Comfort Food */}
+          <Link
+            href="/categories/comfort-food"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-600/20 to-red-600/20 border border-white/10 hover:border-rose-500/50 p-6 md:p-8 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/20"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <Soup className="w-10 h-10 md:w-12 md:h-12 mb-3 text-rose-400 group-hover:scale-110 transition-transform" />
+              <h3 className="text-lg md:text-xl font-bold text-white mb-1">Comfort Food</h3>
+              <p className="text-xs md:text-sm text-gray-400">Soul-Warming Dishes</p>
+            </div>
+          </Link>
+        </div>
+      </section>
 
       {/* Latest Articles Grid */}
       <section className="container mx-auto px-6 py-20 border-t border-white/5 relative z-10">

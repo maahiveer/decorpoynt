@@ -299,152 +299,134 @@ export function CategoryManager() {
                             </p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                                <thead className="bg-slate-50 dark:bg-slate-700">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wider">
-                                            Category
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wider">
-                                            Slug
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-300 uppercase tracking-wider">
-                                            Articles
-                                        </th>
-                                        <th className="relative px-6 py-3">
-                                            <span className="sr-only">Actions</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
-                                    {categories.map((category) => (
-                                        <tr key={category.id}>
-                                            {editingId === category.id ? (
-                                                <>
-                                                    <td className="px-6 py-4" colSpan={4}>
-                                                        <div className="space-y-4">
-                                                            <div className="grid grid-cols-2 gap-4">
-                                                                <div>
-                                                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                                                        Name *
-                                                                    </label>
-                                                                    <input
-                                                                        type="text"
-                                                                        value={formData.name}
-                                                                        onChange={(e) => handleNameChange(e.target.value)}
-                                                                        className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                                                        Slug *
-                                                                    </label>
-                                                                    <input
-                                                                        type="text"
-                                                                        value={formData.slug}
-                                                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                                                        className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                                                    Parent Category
-                                                                </label>
-                                                                <select
-                                                                    value={formData.parent_id}
-                                                                    onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
-                                                                    className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                                >
-                                                                    <option value="">None (Top Level)</option>
-                                                                    {categories.filter(c => !c.parent_id && c.id !== category.id).map((cat) => (
-                                                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            </div>
-                                                            <div>
-                                                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                                                    Description
-                                                                </label>
-                                                                <textarea
-                                                                    rows={2}
-                                                                    value={formData.description}
-                                                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                                                    className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                                />
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <button
-                                                                    onClick={() => handleUpdate(category.id)}
-                                                                    className="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                                                                >
-                                                                    <Save className="h-3 w-3 mr-1" />
-                                                                    Save
-                                                                </button>
-                                                                <button
-                                                                    onClick={cancelEdit}
-                                                                    className="inline-flex items-center px-3 py-1 border border-slate-300 dark:border-slate-600 rounded text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm"
-                                                                >
-                                                                    <X className="h-3 w-3 mr-1" />
-                                                                    Cancel
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0 h-10 w-10">
-                                                                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                                                    <FolderOpen className="h-5 w-5 text-white" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="ml-4">
-                                                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                                                                    {category.name}
-                                                                </div>
-                                                                {category.description && (
-                                                                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                                                                        {category.description}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
-                                                        {category.slug}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
-                                                            <FileText className="h-4 w-4 mr-1" />
-                                                            {articleCounts[category.id] || 0}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                        <div className="flex items-center justify-end gap-2">
-                                                            <button
-                                                                onClick={() => startEdit(category)}
-                                                                className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium"
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleDelete(category.id, category.name)}
-                                                                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium"
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {categories.map((category) => (
+                                <div key={category.id}>
+                                    {editingId === category.id ? (
+                                        <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border-2 border-blue-500">
+                                            <div className="space-y-3">
+                                                <div>
+                                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                                        Name *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.name}
+                                                        onChange={(e) => handleNameChange(e.target.value)}
+                                                        className="block w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                                        Slug *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.slug}
+                                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                                                        className="block w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                                        Parent Category
+                                                    </label>
+                                                    <select
+                                                        value={formData.parent_id}
+                                                        onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
+                                                        className="block w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    >
+                                                        <option value="">None (Top Level)</option>
+                                                        {categories.filter(c => !c.parent_id && c.id !== category.id).map((cat) => (
+                                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                                        Description
+                                                    </label>
+                                                    <textarea
+                                                        rows={2}
+                                                        value={formData.description}
+                                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                                        className="block w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    />
+                                                </div>
+                                                <div className="flex items-center gap-2 pt-2">
+                                                    <button
+                                                        onClick={() => handleUpdate(category.id)}
+                                                        className="flex-1 inline-flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+                                                    >
+                                                        <Save className="h-3.5 w-3.5 mr-1.5" />
+                                                        Save
+                                                    </button>
+                                                    <button
+                                                        onClick={cancelEdit}
+                                                        className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm font-medium"
+                                                    >
+                                                        <X className="h-3.5 w-3.5 mr-1.5" />
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="group relative bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700/50 dark:to-slate-800/50 rounded-xl p-5 border border-slate-200 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-all hover:shadow-lg">
+                                            {/* Category Icon & Name */}
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                                                        <FolderOpen className="h-6 w-6 text-white" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-0.5">
+                                                            {category.name}
+                                                        </h3>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                                                            /{category.slug}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            {category.description && (
+                                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 line-clamp-2">
+                                                    {category.description}
+                                                </p>
                                             )}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+
+                                            {/* Stats */}
+                                            <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-600">
+                                                <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                                                    <FileText className="h-4 w-4 mr-1.5" />
+                                                    <span className="font-medium">{articleCounts[category.id] || 0}</span>
+                                                    <span className="ml-1">recipes</span>
+                                                </div>
+
+                                                {/* Action Buttons */}
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => startEdit(category)}
+                                                        className="inline-flex items-center px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-xs font-medium transition-colors"
+                                                    >
+                                                        <Edit className="h-3 w-3 mr-1" />
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(category.id, category.name)}
+                                                        className="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-colors"
+                                                    >
+                                                        <Trash2 className="h-3 w-3 mr-1" />
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
