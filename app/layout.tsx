@@ -26,9 +26,9 @@ export const metadata: Metadata = {
   },
   description: "Your go-to source for delicious recipes, cooking tips, and culinary inspiration. From quick weeknight dinners to gourmet delights.",
   keywords: ["recipes", "cooking", "food blog", "culinary", "cooking tips", "meal ideas"],
-  authors: [{ name: "Manish Kumar Jain" }],
-  creator: "Manish Kumar Jain",
-  publisher: "Manish Kumar Jain",
+  authors: [{ name: "Devika Nanda" }],
+  creator: "Devika Nanda",
+  publisher: "Devika Nanda",
   robots: {
     index: true,
     follow: true,

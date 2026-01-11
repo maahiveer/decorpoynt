@@ -4,8 +4,8 @@ import { Mail, Youtube, Linkedin, Twitter } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export const metadata = {
-  title: 'About Manish Kumar Jain - Food Enthusiast & Founder of PickPoynt',
-  description: 'Meet Manish Kumar Jain, the founder of PickPoynt. A passionate home cook sharing delicious recipes, cooking tips, and culinary inspiration.',
+  title: 'About Devika Nanda - Food Enthusiast & Founder of PickPoynt',
+  description: 'Meet Devika Nanda, the founder of PickPoynt. A passionate home cook sharing delicious recipes, cooking tips, and culinary inspiration.',
 }
 
 async function getCategories() {
@@ -76,19 +76,19 @@ export default async function AboutPage() {
                     <div className="h-32 w-32 sm:h-44 sm:w-44 rounded-full border-4 border-[#030014] shadow-2xl overflow-hidden shrink-0 bg-white/5">
                       <img
                         src="/manish-kumar-jain.png"
-                        alt="Manish Kumar Jain"
+                        alt="Devika Nanda"
                         className="h-full w-full object-cover"
                       />
                     </div>
 
                     <div className="pb-4">
-                      <h2 className="text-3xl font-bold text-white mb-2">Manish Kumar Jain</h2>
+                      <h2 className="text-3xl font-bold text-white mb-2">Devika Nanda</h2>
                       <p className="text-purple-400 font-medium text-lg">Founder & Chief Editor</p>
                     </div>
 
                     <div className="sm:ml-auto pb-4">
                       <a
-                        href="https://www.linkedin.com/in/manish-kumar-jain-220177395"
+                        href="#"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-full font-bold transition-all shadow-xl hover:scale-105 active:scale-95"
@@ -105,7 +105,7 @@ export default async function AboutPage() {
                       <h3 className="text-2xl font-bold text-white mb-4">Why I Love Cooking</h3>
                       <div className="space-y-4">
                         <p>
-                          Hi, I'm <strong>Manish Kumar Jain</strong>. My journey with cooking started in my grandmother's kitchen, but it quickly became a lifelong passion. There's something incredibly satisfying about creating delicious meals, experimenting with flavors, and sharing food with loved ones.
+                          Hi, I'm <strong>Devika Nanda</strong>. My journey with cooking started in my grandmother's kitchen, but it quickly became a lifelong passion. There's something incredibly satisfying about creating delicious meals, experimenting with flavors, and sharing food with loved ones.
                         </p>
                         <p>
                           I spend my weekends in the <strong>kitchen</strong>, testing new recipes and perfecting old favorites. Whether it's mastering the perfect pasta sauce or discovering the secrets to fluffy pancakes, I live for the culinary details.
