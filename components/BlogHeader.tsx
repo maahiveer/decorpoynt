@@ -1,22 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
-
-// PickPoynt Logo Component
-function PickPoyntLogo({ className = "h-8" }: { className?: string }) {
-  return (
-    <div className={`flex flex-col ${className}`}>
-      <span className="text-[#1e3a8a] font-bold text-2xl tracking-tight" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-        PickPoynt
-      </span>
-      <span className="text-slate-600 dark:text-slate-400 text-xs -mt-1">
-        Decisions made simple
-      </span>
-    </div>
-  )
-}
 
 interface Category {
   id: string
@@ -32,36 +18,39 @@ interface BlogHeaderProps {
 export function BlogHeader({ categories }: BlogHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Group categories into hierarchy
-  const topLevelCategories = categories.filter(c => !c.parent_id)
-  const getSubcategories = (parentId: string) => categories.filter(c => c.parent_id === parentId)
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-900/80">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#030014]/80 backdrop-blur-xl">
+      <div className="container mx-auto px-6">
+        <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center">
-            <PickPoyntLogo className="h-12" />
+            <div className="font-mono text-lg tracking-wider font-bold text-white">
+              PickPoynt&trade;
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
             >
               Home
             </Link>
-
+            <Link
+              href="/articles"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
+            >
+              Recipes
+            </Link>
             <Link
               href="/about"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
             >
               About
             </Link>
             <Link
               href="/contact"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors"
             >
               Contact
             </Link>
@@ -69,7 +58,7 @@ export function BlogHeader({ categories }: BlogHeaderProps) {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -79,26 +68,32 @@ export function BlogHeader({ categories }: BlogHeaderProps) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-700">
-            <nav className="flex flex-col space-y-3">
+          <div className="md:hidden py-6 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-300">
+            <nav className="flex flex-col space-y-4">
               <Link
                 href="/"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors px-2 py-1"
+                className="text-lg font-medium text-gray-300 hover:text-white transition-colors px-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
-
+              <Link
+                href="/articles"
+                className="text-lg font-medium text-gray-300 hover:text-white transition-colors px-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Recipes
+              </Link>
               <Link
                 href="/about"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors px-2 py-1"
+                className="text-lg font-medium text-gray-300 hover:text-white transition-colors px-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="/contact"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors px-2 py-1"
+                className="text-lg font-medium text-gray-300 hover:text-white transition-colors px-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
@@ -110,3 +105,4 @@ export function BlogHeader({ categories }: BlogHeaderProps) {
     </header>
   )
 }
+
