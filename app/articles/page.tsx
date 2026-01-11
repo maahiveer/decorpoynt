@@ -87,7 +87,7 @@ export default async function ArticlesPage({
                 <section className="container mx-auto px-6 pb-24">
                     {articles.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {articles.map((article) => (
+                            {articles.map((article: any) => (
                                 <Link
                                     key={article.id}
                                     href={`/${article.slug}`}
@@ -160,8 +160,8 @@ export default async function ArticlesPage({
                                         key={p}
                                         href={`/articles?page=${p}`}
                                         className={`w-10 h-10 flex items-center justify-center rounded-full border transition-all ${p === currentPage
-                                                ? 'bg-purple-600 border-purple-500 text-white'
-                                                : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/30'
+                                            ? 'bg-purple-600 border-purple-500 text-white'
+                                            : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/30'
                                             }`}
                                     >
                                         {p}

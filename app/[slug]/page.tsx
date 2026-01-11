@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Calendar, Clock, User } from 'lucide-react'
+import { BlogHeader } from '@/components/BlogHeader'
+import { BlogFooter } from '@/components/BlogFooter'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -225,26 +227,23 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     const finalContent = article.content;
 
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+      <div className="min-h-screen bg-[#030014] text-white">
+        <BlogHeader categories={[]} />
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-
-
-        <main className="w-full p-0 m-0">
-          <div className="w-full p-0 m-0">
-            <article className="w-full max-w-none p-0 m-0">
-
-              <div
-                className="article-content w-full"
-                dangerouslySetInnerHTML={{ __html: finalContent }}
-              />
-            </article>
-          </div>
+        <main className="w-full">
+          <article className="w-full max-w-none">
+            <div
+              className="article-content w-full"
+              dangerouslySetInnerHTML={{ __html: finalContent }}
+            />
+          </article>
         </main>
+        <BlogFooter />
       </div>
     )
   } catch (error) {
