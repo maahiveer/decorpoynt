@@ -133,14 +133,15 @@ export default async function ArticlesPage({
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="max-w-4xl mx-auto text-center">
                             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-                                All Articles
+                                All Recipes
                             </h1>
                             <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400">
-                                Explore our full collection of pickleball guides, gear reviews, and stories.
+                                Explore our full collection of delicious recipes, cooking tips, and culinary inspiration.
                             </p>
                         </div>
                     </div>
                 </section>
+
 
                 {/* Article List */}
                 <ArticleListSSR

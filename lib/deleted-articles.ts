@@ -36,7 +36,6 @@ export const DELETED_ARTICLE_SLUGS = [
  * Banned URL patterns (for category-level blocking)
  */
 export const BANNED_PATTERNS = [
-    '/health',
     '/manifestation',
     '/supplements',
     '/reviews', // Block all review category pages
@@ -55,8 +54,8 @@ export function isDeleted(pathname: string): boolean {
         return true
     }
 
-    // Check if path contains non-pickleball keywords
-    const deleteKeywords = ['billionaire', 'brainwave', 'parasite', 'manifestation', 'agility-writer', 'babygrowth']
+    // Check if path contains non-pickleball/recipe keywords
+    const deleteKeywords = ['billionaire', 'parasite', 'manifestation', 'agility-writer', 'babygrowth']
     if (deleteKeywords.some(keyword => pathname.toLowerCase().includes(keyword))) {
         return true
     }
@@ -68,3 +67,4 @@ export function isDeleted(pathname: string): boolean {
 
     return false
 }
+
