@@ -64,24 +64,12 @@
   background: #555;
 }
 
-/* Aggressive Article Text Visibility Fix */
-.article-content,
-.article-content * {
-  color: #ffffff !important;
-  background-color: transparent !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+/* Natural Article Content - Preserves HTML colors */
+.article-content {
+  overflow-wrap: break-word;
 }
 
-/* Re-allow images to display correctly */
 .article-content img {
-  max-width: 100% !important;
-  height: auto !important;
-  background-color: transparent !important;
-}
-
-/* Re-allow specific link colors if desired, but here we prioritize visibility */
-.article-content a {
-  text-decoration: underline !important;
-  color: #38bdf8 !important;
-  /* Sky 400 */
+  max-width: 100%;
+  height: auto;
 }

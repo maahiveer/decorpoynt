@@ -227,14 +227,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     const finalContent = article.content;
 
     return (
-      <div className="min-h-screen bg-[#030014] text-white">
+      <div className="min-h-screen bg-white text-black">
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        <article className="w-full m-0 p-0">
+        <article className="w-full m-0 p-0 bg-white">
           <div
             className="article-content w-full m-0 p-0"
             dangerouslySetInnerHTML={{ __html: finalContent }}
