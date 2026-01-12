@@ -75,6 +75,8 @@ export const metadata: Metadata = {
 
 import { CookieConsent } from "@/components/CookieConsent";
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -89,6 +91,11 @@ export default function RootLayout({
           {children}
           <CookieConsent />
         </AuthProvider>
+
+        {/* Monetag Interstitial Ads */}
+        <Script id="monetag-interstitial" strategy="afterInteractive">
+          {`(function(s){s.dataset.zone='10327495',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
+        </Script>
       </body>
     </html>
   );
