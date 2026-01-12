@@ -109,10 +109,27 @@ export function ArticleEditor({ article }: ArticleEditorProps) {
     setLoading(true)
     setError('')
 
+    // Generate slug from finalTitle if slug is empty
+    let finalSlug = slug.trim()
+    if (!finalSlug && finalTitle) {
+      finalSlug = finalTitle
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim()
+    }
+
+    if (!finalSlug || finalSlug === 'untitled-article') {
+      setError('A title or slug is required to save the article')
+      setLoading(false)
+      return
+    }
+
     try {
       const articleData = {
         title: finalTitle,
-        slug: slug.trim(),
+        slug: finalSlug,
         content: content.trim(),
         excerpt: excerpt.trim(),
         status: publishStatus,
