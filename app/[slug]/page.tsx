@@ -134,6 +134,8 @@ export async function generateMetadata({ params }: ArticlePageProps) {
   }
 }
 
+import { ArticleRenderer } from '@/components/ArticleRenderer'
+
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params
 
@@ -158,24 +160,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
     if (!article) {
       notFound()
-    }
-
-    const formatDate = (dateString: string) => {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    }
-
-    const getReadingTime = (content: string) => {
-      const wordsPerMinute = 200
-      // Remove HTML tags and get actual text content
-      const textContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-      const wordCount = textContent.split(' ').filter(word => word.length > 0).length
-      const readingTime = Math.ceil(wordCount / wordsPerMinute)
-      // Cap at reasonable maximum
-      return Math.min(readingTime, 30)
     }
 
     // Extract title from HTML content (same logic as in generateMetadata)
@@ -235,10 +219,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         />
 
         <article className="w-full m-0 p-0 bg-white">
-          <div
-            className="article-content w-full m-0 p-0"
-            dangerouslySetInnerHTML={{ __html: finalContent }}
-          />
+          <ArticleRenderer content={finalContent} />
         </article>
       </div>
     )
