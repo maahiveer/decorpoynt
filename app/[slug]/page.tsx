@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Calendar, Clock, User } from 'lucide-react'
-import { BlogHeader } from '@/components/BlogHeader'
+
 import { BlogFooter } from '@/components/BlogFooter'
 
 interface ArticlePageProps {
@@ -209,11 +209,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
     const finalContent = article.content;
 
-    // Fetch categories for the header
-    const { data: categories } = await supabase
-      .from('categories')
-      .select('id, name, slug, parent_id')
-      .order('name', { ascending: true })
+
 
     return (
       <div className="min-h-screen bg-white text-black flex flex-col">
@@ -223,7 +219,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        <BlogHeader categories={categories || []} theme="light" />
+        {/* BlogHeader removed as requested */}
 
         <main className="flex-1">
           <article className="w-full m-0 p-0 bg-white">
