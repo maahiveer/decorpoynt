@@ -66,18 +66,18 @@ export default async function Home() {
 
         <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-            Elevate your <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">cooking</span>.
+            Grow your <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">green space</span>.
           </h1>
 
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Delicious recipes, cooking tips, and culinary inspiration from the kitchen.
-            For food lovers, by food lovers.
+            Expert gardening tips, plant care guides, and landscaping inspiration.
+            For plant lovers, by plant lovers.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Link href="/articles" className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
-              Explore Recipes <ArrowRight className="w-4 h-4" />
+              Explore Guides <ArrowRight className="w-4 h-4" />
             </Link>
             <Link href="/about" className="px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 backdrop-blur text-white font-medium transition-all flex items-center justify-center">
               Our Mission
@@ -86,12 +86,12 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Recipe Categories Section */}
+      {/* Gardening Categories Section */}
       <section className="container mx-auto px-6 py-16 relative z-10 border-t border-white/5">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Discover delicious recipes organized by cuisine and meal type
+            Discover expert guides organized by plant type and gardening technique
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default async function Home() {
                     <Icon className={`w-10 h-10 md:w-12 md:h-12 mb-3 ${iconColor} group-hover:scale-110 transition-transform duration-500`} />
                     <h3 className="text-lg md:text-xl font-bold text-white mb-1">{category.name}</h3>
                     <p className="text-xs md:text-sm text-gray-400 line-clamp-1">
-                      {category.description || `Explore ${category.name} recipes`}
+                      {category.description || `Explore ${category.name} guides`}
                     </p>
                   </div>
                 </Link>

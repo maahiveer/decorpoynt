@@ -23,8 +23,8 @@ export function BlogHeader({ categories, theme = 'dark' }: BlogHeaderProps) {
 
   return (
     <header className={`sticky top-0 z-50 w-full backdrop-blur-xl transition-colors duration-300 ${isDark
-        ? 'bg-[#030014]/80 border-b border-white/5'
-        : 'bg-white/80 border-b border-slate-200/60 shadow-sm'
+      ? 'bg-[#030014]/80 border-b border-white/5'
+      : 'bg-white/80 border-b border-slate-200/60 shadow-sm'
       }`}>
       <div className="container mx-auto px-6">
         <div className="flex h-20 items-center justify-between">
@@ -44,13 +44,7 @@ export function BlogHeader({ categories, theme = 'dark' }: BlogHeaderProps) {
             >
               Home
             </Link>
-            <Link
-              href="/articles"
-              className={`text-sm font-medium transition-colors ${isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-                }`}
-            >
-              Recipes
-            </Link>
+
             <Link
               href="/about"
               className={`text-sm font-medium transition-colors ${isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -91,14 +85,7 @@ export function BlogHeader({ categories, theme = 'dark' }: BlogHeaderProps) {
               >
                 Home
               </Link>
-              <Link
-                href="/articles"
-                className={`text-lg font-medium transition-colors px-2 ${isDark ? 'text-gray-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'
-                  }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Recipes
-              </Link>
+
               <Link
                 href="/about"
                 className={`text-lg font-medium transition-colors px-2 ${isDark ? 'text-gray-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'

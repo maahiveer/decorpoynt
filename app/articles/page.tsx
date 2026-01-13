@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic'
 const ARTICLES_PER_PAGE = 12
 
 export const metadata = {
-    title: 'All Recipes - PickPoynt',
-    description: 'Browse all recipes and culinary inspiration on PickPoynt',
+    title: 'All Guides - PickPoynt',
+    description: 'Browse all expert gardening guides and plant care tips on PickPoynt',
 }
 
 async function getCategories() {
@@ -76,10 +76,10 @@ export default async function ArticlesPage({
                 {/* Hero Section */}
                 <section className="container mx-auto px-6 py-16 md:py-24 text-center">
                     <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-                        All Recipes
+                        All Guides
                     </h1>
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                        Explore our full collection of delicious recipes, cooking tips, and culinary inspiration.
+                        Explore our full collection of expert gardening guides, plant care tips, and landscaping inspiration.
                     </p>
                 </section>
 
@@ -115,7 +115,7 @@ export default async function ArticlesPage({
                                             {article.title}
                                         </h3>
                                         <p className="text-gray-400 text-sm mb-6 line-clamp-3">
-                                            {article.excerpt || "Click to discover the secret ingredients and step-by-step cooking method..."}
+                                            {article.excerpt || "Click to discover expert tips and step-by-step gardening advice..."}
                                         </p>
                                         <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
                                             <div className="flex items-center text-xs text-gray-500 gap-4">
@@ -138,8 +138,8 @@ export default async function ArticlesPage({
                         </div>
                     ) : (
                         <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
-                            <h3 className="text-xl font-medium text-gray-300 mb-2">No recipes found</h3>
-                            <p className="text-gray-500">Check back soon for new culinary inspiration.</p>
+                            <h3 className="text-xl font-medium text-gray-300 mb-2">No guides found</h3>
+                            <p className="text-gray-500">Check back soon for new gardening inspiration.</p>
                         </div>
                     )}
 
