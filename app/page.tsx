@@ -56,8 +56,8 @@ export default async function Home() {
         {/* Hero Background Image */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src="/images/hero-bg.png"
-            alt="Delicious cooking background"
+            src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2070&auto=format&fit=crop"
+            alt="Beautiful garden background"
             className="w-full h-full object-cover"
             style={{ maskImage: 'linear-gradient(to bottom, black, transparent)' }}
           />
