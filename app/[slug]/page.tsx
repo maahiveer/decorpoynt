@@ -239,7 +239,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
               {/* Title */}
               <h1 className="text-3xl md:text-5xl font-extrabold !text-slate-900 dark:!text-white mb-6 leading-tight break-words">
-                {extractedTitle || 'Untitled Article'}
+                {(extractedTitle || 'Untitled Article')
+                  .replace(/&nbsp;/g, ' ')
+                  .replace(/&amp;/g, '&')
+                  .replace(/&quot;/g, '"')
+                  .replace(/&#39;/g, "'")
+                  .replace(/&lt;/g, '<')
+                  .replace(/&gt;/g, '>')}
               </h1>
 
               {/* Meta Data */}
