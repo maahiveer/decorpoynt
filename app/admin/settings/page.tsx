@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { AdminLayout } from '@/components/AdminLayout'
 import { supabase } from '@/lib/supabase'
-import { Save, Key, Eye, EyeOff, Sparkles } from 'lucide-react'
+import { Save, Key, Eye, EyeOff, Sparkles, Image as ImageIcon } from 'lucide-react'
 
 interface SiteSetting {
     setting_key: string
@@ -202,6 +202,27 @@ export default function SettingsPage() {
                         />
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                             e.g., <code>gpt-4o</code>, <code>claude-3-5-sonnet</code>
+                        </p>
+                    </div>
+
+                    {/* APIFree Image Model */}
+                    <div>
+                        <label htmlFor="apifree-image-model" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <div className="flex items-center gap-2">
+                                <ImageIcon className="h-4 w-4 text-pink-500" />
+                                Image Model ID
+                            </div>
+                        </label>
+                        <input
+                            id="apifree-image-model"
+                            type="text"
+                            value={apiFreeImageModel}
+                            onChange={(e) => setApiFreeImageModel(e.target.value)}
+                            className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
+                            placeholder="dall-e-3"
+                        />
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                            Default: <code>dall-e-3</code>. You can change this if APIFree supports other image models.
                         </p>
                     </div>
 
