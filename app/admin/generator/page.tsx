@@ -10,7 +10,7 @@ type GeneratorMode = 'quick' | 'advanced'
 export default function GeneratorPage() {
     const router = useRouter()
     const [topic, setTopic] = useState('')
-    const [mode, setMode] = useState<GeneratorMode>('quick')
+    const [mode, setMode] = useState<GeneratorMode>('advanced')
     const [isGenerating, setIsGenerating] = useState(false)
     const [error, setError] = useState('')
     const [loadingStep, setLoadingStep] = useState('')
