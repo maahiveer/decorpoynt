@@ -23,8 +23,8 @@ export default function GeneratorPage() {
         setIsGenerating(true)
         setError('')
 
-        const endpoint = mode === 'advanced' ? '/api/generate-listicle' : '/api/generate-article'
 
+        const endpoint = mode === 'advanced' ? '/api/generate-gemini' : '/api/generate-article'
         if (mode === 'advanced') {
             setLoadingStep('🤖 Connecting to OpenRouter AI...')
             setTimeout(() => setLoadingStep('✍️ Writing 200-word descriptions for each idea...'), 2000)

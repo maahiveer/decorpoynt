@@ -13,8 +13,10 @@ interface SiteSetting {
 export default function SettingsPage() {
     const [openrouterKey, setOpenrouterKey] = useState('')
     const [replicateKey, setReplicateKey] = useState('')
+    const [geminiKey, setGeminiKey] = useState('')
     const [showOpenrouterKey, setShowOpenrouterKey] = useState(false)
     const [showReplicateKey, setShowReplicateKey] = useState(false)
+    const [showGeminiKey, setShowGeminiKey] = useState(false)
     const [loading, setLoading] = useState(false)
     const [fetching, setFetching] = useState(true)
     const [error, setError] = useState('')
@@ -30,7 +32,7 @@ export default function SettingsPage() {
             const { data, error } = await supabase
                 .from('site_settings')
                 .select('setting_key, setting_value')
-                .in('setting_key', ['openrouter_api_key', 'replicate_api_token'])
+                .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'gemini_api_key'])
 
             if (error) throw error
 
@@ -38,9 +40,11 @@ export default function SettingsPage() {
                 const settings = data as SiteSetting[]
                 const openrouterData = settings.find(s => s.setting_key === 'openrouter_api_key')
                 const replicateData = settings.find(s => s.setting_key === 'replicate_api_token')
+                const geminiData = settings.find(s => s.setting_key === 'gemini_api_key')
 
                 setOpenrouterKey(openrouterData?.setting_value || '')
                 setReplicateKey(replicateData?.setting_value || '')
+                setGeminiKey(geminiData?.setting_value || '')
             }
         } catch (error) {
             console.error('Error fetching settings:', error)
@@ -81,6 +85,19 @@ export default function SettingsPage() {
                 })
 
             if (replicateError) throw replicateError
+
+            // Update Gemini API Key
+            const { error: geminiError } = await supabase
+                .from('site_settings')
+                .upsert({
+                    setting_key: 'gemini_api_key',
+                    setting_value: geminiKey.trim() || null,
+                    updated_at: new Date().toISOString()
+                }, {
+                    onConflict: 'setting_key'
+                })
+
+            if (geminiError) throw geminiError
 
             setSuccess('API keys saved successfully! Advanced AI Generator is now ready to use.')
             setTimeout(() => setSuccess(''), 5000)
@@ -136,9 +153,40 @@ export default function SettingsPage() {
                             Add your API keys below to unlock the Advanced AI Generator with 200-word descriptions and high-quality images.
                         </p>
                         <div className="space-y-2 text-xs text-blue-700 dark:text-blue-400">
+                            <p>• <strong>Google Gemini (FREE):</strong> Get your key at <a href="https://makersuite.google.com/app/apikey" target="_blank" className="underline">makersuite.google.com</a></p>
                             <p>• <strong>OpenRouter:</strong> Get your key at <a href="https://openrouter.ai/keys" target="_blank" className="underline">openrouter.ai/keys</a></p>
                             <p>• <strong>Replicate:</strong> Get your token at <a href="https://replicate.com/account/api-tokens" target="_blank" className="underline">replicate.com/account/api-tokens</a></p>
                         </div>
+                    </div>
+
+                    {/* Gemini API Key */}
+                    <div>
+                        <label htmlFor="gemini-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <div className="flex items-center gap-2">
+                                <Key className="h-4 w-4" />
+                                Google Gemini API Key (FREE) ⭐
+                            </div>
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="gemini-key"
+                                type={showGeminiKey ? 'text' : 'password'}
+                                value={geminiKey}
+                                onChange={(e) => setGeminiKey(e.target.value)}
+                                className="block w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
+                                placeholder="AIza..."
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowGeminiKey(!showGeminiKey)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                            >
+                                {showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                            <strong className="text-green-600 dark:text-green-400">FREE!</strong> Used for generating article text with Gemini Pro (60 requests/min free tier)
+                        </p>
                     </div>
 
                     {/* OpenRouter API Key */}
