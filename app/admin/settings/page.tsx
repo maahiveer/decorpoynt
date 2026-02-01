@@ -19,6 +19,7 @@ export default function SettingsPage() {
     // APIFree Settings
     const [apiFreeKey, setApiFreeKey] = useState('')
     const [apiFreeModel, setApiFreeModel] = useState('gpt-4o')
+    const [apiFreeImageModel, setApiFreeImageModel] = useState('dall-e-3')
     const [showApiFreeKey, setShowApiFreeKey] = useState(false)
 
     // Legacy display toggles
@@ -40,7 +41,7 @@ export default function SettingsPage() {
         try {
             const keysToFetch = [
                 'openrouter_api_key', 'replicate_api_token', 'gemini_api_key', 'openrouter_model',
-                'apifree_api_key', 'apifree_model'
+                'apifree_api_key', 'apifree_model', 'apifree_image_model'
             ]
 
             const { data, error } = await supabase
@@ -89,7 +90,8 @@ export default function SettingsPage() {
                 { setting_key: 'openrouter_model', setting_value: openRouterModel.trim() || 'anthropic/claude-3.5-sonnet', updated_at: new Date().toISOString() },
 
                 { setting_key: 'apifree_api_key', setting_value: apiFreeKey.trim() || null, updated_at: new Date().toISOString() },
-                { setting_key: 'apifree_model', setting_value: apiFreeModel.trim() || 'gpt-4o', updated_at: new Date().toISOString() }
+                { setting_key: 'apifree_model', setting_value: apiFreeModel.trim() || 'gpt-4o', updated_at: new Date().toISOString() },
+                { setting_key: 'apifree_image_model', setting_value: apiFreeImageModel.trim() || 'dall-e-3', updated_at: new Date().toISOString() }
             ]
 
             const { error: upsertError } = await supabase
