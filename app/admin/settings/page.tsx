@@ -14,10 +14,18 @@ export default function SettingsPage() {
     const [openrouterKey, setOpenrouterKey] = useState('')
     const [replicateKey, setReplicateKey] = useState('')
     const [geminiKey, setGeminiKey] = useState('')
-    const [openRouterModel, setOpenRouterModel] = useState('anthropic/claude-3.5-sonnet') // New state
+    const [openRouterModel, setOpenRouterModel] = useState('anthropic/claude-3.5-sonnet')
+
+    // APIFree Settings
+    const [apiFreeKey, setApiFreeKey] = useState('')
+    const [apiFreeModel, setApiFreeModel] = useState('gpt-4o')
+    const [showApiFreeKey, setShowApiFreeKey] = useState(false)
+
+    // Legacy display toggles
     const [showOpenrouterKey, setShowOpenrouterKey] = useState(false)
     const [showReplicateKey, setShowReplicateKey] = useState(false)
     const [showGeminiKey, setShowGeminiKey] = useState(false)
+
     const [loading, setLoading] = useState(false)
     const [fetching, setFetching] = useState(true)
     const [error, setError] = useState('')
@@ -30,10 +38,15 @@ export default function SettingsPage() {
     const fetchSettings = async () => {
         setFetching(true)
         try {
+            const keysToFetch = [
+                'openrouter_api_key', 'replicate_api_token', 'gemini_api_key', 'openrouter_model',
+                'apifree_api_key', 'apifree_model'
+            ]
+
             const { data, error } = await supabase
                 .from('site_settings')
                 .select('setting_key, setting_value')
-                .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'gemini_api_key', 'openrouter_model']) // Added openrouter_model
+                .in('setting_key', keysToFetch)
 
             if (error) throw error
 
@@ -42,12 +55,18 @@ export default function SettingsPage() {
                 const openrouterData = settings.find(s => s.setting_key === 'openrouter_api_key')
                 const replicateData = settings.find(s => s.setting_key === 'replicate_api_token')
                 const geminiData = settings.find(s => s.setting_key === 'gemini_api_key')
-                const modelData = settings.find(s => s.setting_key === 'openrouter_model') // New
+                const modelData = settings.find(s => s.setting_key === 'openrouter_model')
+
+                const apiFreeKeyData = settings.find(s => s.setting_key === 'apifree_api_key')
+                const apiFreeModelData = settings.find(s => s.setting_key === 'apifree_model')
 
                 setOpenrouterKey(openrouterData?.setting_value || '')
                 setReplicateKey(replicateData?.setting_value || '')
                 setGeminiKey(geminiData?.setting_value || '')
-                setOpenRouterModel(modelData?.setting_value || 'anthropic/claude-3.5-sonnet') // New
+                setOpenRouterModel(modelData?.setting_value || 'anthropic/claude-3.5-sonnet')
+
+                setApiFreeKey(apiFreeKeyData?.setting_value || '')
+                setApiFreeModel(apiFreeModelData?.setting_value || 'gpt-4o')
             }
         } catch (error) {
             console.error('Error fetching settings:', error)
@@ -67,7 +86,10 @@ export default function SettingsPage() {
                 { setting_key: 'openrouter_api_key', setting_value: openrouterKey.trim() || null, updated_at: new Date().toISOString() },
                 { setting_key: 'replicate_api_token', setting_value: replicateKey.trim() || null, updated_at: new Date().toISOString() },
                 { setting_key: 'gemini_api_key', setting_value: geminiKey.trim() || null, updated_at: new Date().toISOString() },
-                { setting_key: 'openrouter_model', setting_value: openRouterModel.trim() || 'anthropic/claude-3.5-sonnet', updated_at: new Date().toISOString() }
+                { setting_key: 'openrouter_model', setting_value: openRouterModel.trim() || 'anthropic/claude-3.5-sonnet', updated_at: new Date().toISOString() },
+
+                { setting_key: 'apifree_api_key', setting_value: apiFreeKey.trim() || null, updated_at: new Date().toISOString() },
+                { setting_key: 'apifree_model', setting_value: apiFreeModel.trim() || 'gpt-4o', updated_at: new Date().toISOString() }
             ]
 
             const { error: upsertError } = await supabase
@@ -125,127 +147,97 @@ export default function SettingsPage() {
                     {/* Info Box */}
                     <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                         <h3 className="text-sm font-medium text-blue-900 dark:text-blue-300 mb-2">
-                            🚀 Enable Advanced AI Features
+                            🚀 Enable APIFree.ai (Recommended)
                         </h3>
                         <p className="text-sm text-blue-800 dark:text-blue-400 mb-3">
-                            Add your API keys below to unlock the Advanced AI Generator with 200-word descriptions and high-quality images.
+                            Use APIFree.ai for both text and image generation. It provides access to GPT-4, Claude, and more via a single key.
                         </p>
                         <div className="space-y-2 text-xs text-blue-700 dark:text-blue-400">
-                            <p>• <strong>Google Gemini (FREE):</strong> Get your key at <a href="https://makersuite.google.com/app/apikey" target="_blank" className="underline">makersuite.google.com</a></p>
-                            <p>• <strong>OpenRouter:</strong> Get your key at <a href="https://openrouter.ai/keys" target="_blank" className="underline">openrouter.ai/keys</a></p>
-                            <p>• <strong>Replicate:</strong> Get your token at <a href="https://replicate.com/account/api-tokens" target="_blank" className="underline">replicate.com/account/api-tokens</a></p>
+                            <p>• <strong>APIFree.ai:</strong> Get your key at <a href="https://apifree.ai" target="_blank" className="underline">apifree.ai</a></p>
                         </div>
                     </div>
 
-                    {/* Gemini API Key */}
+                    {/* APIFree API Key */}
                     <div>
-                        <label htmlFor="gemini-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label htmlFor="apifree-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                             <div className="flex items-center gap-2">
                                 <Key className="h-4 w-4" />
-                                Google Gemini API Key (FREE) ⭐
+                                APIFree.ai API Key
                             </div>
                         </label>
                         <div className="relative">
                             <input
-                                id="gemini-key"
-                                type={showGeminiKey ? 'text' : 'password'}
-                                value={geminiKey}
-                                onChange={(e) => setGeminiKey(e.target.value)}
+                                id="apifree-key"
+                                type={showApiFreeKey ? 'text' : 'password'}
+                                value={apiFreeKey}
+                                onChange={(e) => setApiFreeKey(e.target.value)}
                                 className="block w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
-                                placeholder="AIza..."
+                                placeholder="sk-..."
                             />
                             <button
                                 type="button"
-                                onClick={() => setShowGeminiKey(!showGeminiKey)}
+                                onClick={() => setShowApiFreeKey(!showApiFreeKey)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                             >
-                                {showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                {showApiFreeKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </button>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            <strong className="text-green-600 dark:text-green-400">FREE!</strong> Used for generating article text with Gemini Pro (60 requests/min free tier)
-                        </p>
                     </div>
 
-                    {/* OpenRouter Model ID Setting */}
-                    <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                        <label htmlFor="openrouter-model" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {/* APIFree Text Model */}
+                    <div>
+                        <label htmlFor="apifree-model" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                             <div className="flex items-center gap-2">
                                 <Sparkles className="h-4 w-4 text-purple-500" />
-                                OpenRouter Model ID (Premium)
+                                Text Model ID
                             </div>
                         </label>
                         <input
-                            id="openrouter-model"
+                            id="apifree-model"
                             type="text"
-                            value={openRouterModel}
-                            onChange={(e) => setOpenRouterModel(e.target.value)}
+                            value={apiFreeModel}
+                            onChange={(e) => setApiFreeModel(e.target.value)}
                             className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
-                            placeholder="anthropic/claude-3.5-sonnet"
+                            placeholder="gpt-4o"
                         />
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            Default: <code>anthropic/claude-3.5-sonnet</code>. You can change this to <code>openai/gpt-4o</code> or any other OpenRouter model ID.
+                            e.g., <code>gpt-4o</code>, <code>claude-3-5-sonnet</code>
                         </p>
                     </div>
 
-                    {/* OpenRouter API Key */}
-                    <div>
-                        <label htmlFor="openrouter-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                            <div className="flex items-center gap-2">
-                                <Key className="h-4 w-4" />
+                    <hr className="border-slate-200 dark:border-slate-700" />
+
+                    {/* Legacy/Alternative Keys (Collapsed or Secondary) */}
+                    <div className="opacity-75 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+                        <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">Legacy Providers (Optional)</h3>
+
+                        {/* OpenRouter API Key */}
+                        <div className="mb-4">
+                            <label htmlFor="openrouter-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 OpenRouter API Key
-                            </div>
-                        </label>
-                        <div className="relative">
+                            </label>
                             <input
                                 id="openrouter-key"
-                                type={showOpenrouterKey ? 'text' : 'password'}
+                                type="password"
                                 value={openrouterKey}
                                 onChange={(e) => setOpenrouterKey(e.target.value)}
-                                className="block w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
-                                placeholder="sk-or-v1-..."
+                                className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-mono text-sm"
                             />
-                            <button
-                                type="button"
-                                onClick={() => setShowOpenrouterKey(!showOpenrouterKey)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-                            >
-                                {showOpenrouterKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            Used for generating article text with Claude 3.5 Sonnet
-                        </p>
-                    </div>
 
-                    {/* Replicate API Token */}
-                    <div>
-                        <label htmlFor="replicate-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                            <div className="flex items-center gap-2">
-                                <Key className="h-4 w-4" />
+                        {/* Replicate API Token */}
+                        <div>
+                            <label htmlFor="replicate-key" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                 Replicate API Token
-                            </div>
-                        </label>
-                        <div className="relative">
+                            </label>
                             <input
                                 id="replicate-key"
-                                type={showReplicateKey ? 'text' : 'password'}
+                                type="password"
                                 value={replicateKey}
                                 onChange={(e) => setReplicateKey(e.target.value)}
-                                className="block w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
-                                placeholder="r8_..."
+                                className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-mono text-sm"
                             />
-                            <button
-                                type="button"
-                                onClick={() => setShowReplicateKey(!showReplicateKey)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-                            >
-                                {showReplicateKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            Used for generating high-quality photorealistic images
-                        </p>
                     </div>
 
                     {/* Save Button */}
