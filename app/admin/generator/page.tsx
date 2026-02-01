@@ -46,7 +46,8 @@ export default function GeneratorPage() {
             })
 
             if (!response.ok) {
-                throw new Error('Failed to generate article')
+                const errorData = await response.json().catch(() => ({}))
+                throw new Error(errorData.error || `Failed to generate article: ${response.statusText}`)
             }
 
             const generatedData = await response.json()
