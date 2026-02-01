@@ -12,11 +12,11 @@ interface Category {
 }
 
 interface BlogHeaderProps {
-  categories: Category[]
+  categories?: Category[]
   theme?: 'dark' | 'light'
 }
 
-export function BlogHeader({ categories, theme = 'dark' }: BlogHeaderProps) {
+export function BlogHeader({ categories = [], theme = 'dark' }: BlogHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const isDark = theme === 'dark'
