@@ -212,18 +212,76 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 
     return (
-      <div className="min-h-screen bg-white text-black flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans">
+        {/* Blog Header included */}
+        <BlogHeader />
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
 
-        {/* BlogHeader removed as requested */}
+        <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-12">
+          <article className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden">
 
-        <main className="flex-1">
-          <article className="w-full m-0 p-0 bg-white">
-            <ArticleRenderer content={finalContent} />
+            {/* Article Header */}
+            <header className="p-6 md:p-10 border-b border-slate-100 dark:border-slate-700">
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {article.tags?.map((tag: string) => (
+                  <span key={tag} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold uppercase tracking-wide">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Title */}
+              <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">
+                {extractedTitle}
+              </h1>
+
+              {/* Meta Data */}
+              <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500 dark:text-slate-400 mb-8 border-t border-b border-slate-100 dark:border-slate-700 py-4">
+                <div className="flex items-center">
+                  <User className="h-4 w-4 mr-2 text-blue-500" />
+                  <span className="font-medium">{article.user_profiles?.full_name || "PickPoynt Author"}</span>
+                </div>
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2 text-blue-500" />
+                  <time dateTime={article.published_at || article.created_at}>
+                    {new Date(article.published_at || article.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="h-4 w-4 mr-2 text-blue-500" />
+                  <span>{Math.ceil(article.content.split(' ').length / 200)} min read</span>
+                </div>
+              </div>
+
+              {/* Featured Image */}
+              {article.featured_image && (
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src={article.featured_image}
+                    alt={extractedTitle}
+                    className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+              )}
+            </header>
+
+            {/* Article Content */}
+            <div className="p-6 md:p-12">
+              <div className="prose prose-lg prose-slate dark:prose-invert max-w-none article-content">
+                <ArticleRenderer content={finalContent} />
+              </div>
+            </div>
+
           </article>
         </main>
 
