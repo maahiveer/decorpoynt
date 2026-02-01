@@ -128,7 +128,7 @@ export default function GeneratorPage() {
                             {mode === 'advanced' && (
                                 <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                                     <p className="text-sm text-blue-800 dark:text-blue-300">
-                                        <strong>Advanced Mode (Recommended):</strong> Uses Google Gemini (Free) for human-like 200-word descriptions + Pollinations AI for unlimited free images.
+                                        <strong>Advanced Mode (Premium):</strong> Uses OpenRouter AI for text + Replicate for high-quality images. Requires API keys in Settings.
                                     </p>
                                 </div>
                             )}
