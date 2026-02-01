@@ -107,11 +107,135 @@ async function getApiKeys() {
 }
 
 async function generateArticleContent(topic: string, cleanTopic: string, itemCount: number, keywords?: string) {
-    const { openrouterKey: OPENROUTER_API_KEY, openrouterModel, apiFreeKey, apiFreeModel } = await getApiKeys()
+    const { openrouterKey, openrouterModel, apiFreeKey, apiFreeModel } = await getApiKeys()
 
-    // ... (rest of function remains same)
+    const keywordsSection = keywords ? `\n\nSEO KEYWORDS TO INCORPORATE:\n${keywords}\n\nNaturally weave these keywords throughout the article for SEO optimization.` : ''
 
-    // ...
+    // Construct Prompt (Same for both providers)
+    const prompt = `Write a 1,500-word SEO article titled "${topic}" that is both engaging and informative. The article must be written as if you are having a friendly, informal conversation with a fellow enthusiast.${keywordsSection}
+
+CRITICAL FORMATTING REQUIREMENT: You MUST respond with ONLY valid JSON in this exact structure (no markdown, no code blocks, just pure JSON):
+
+{
+  "title": "SEO-optimized title",
+  "intro": "2-3 paragraph introduction (150-200 words)",
+  "items": [
+    {
+      "title": "Item title",
+      "content": "200-word description",
+      "imagePrompt": "detailed image prompt"
+    }
+  ],
+  "conclusion": "Conclusion paragraph (100-150 words)"
+}
+
+Style & Tone Requirements:
+1. Conversational and Informal - Write as if talking to a friend
+2. Use everyday language, avoid formal/academic tone
+3. Inject light sarcasm and humor sparingly
+4. Include personal opinions or anecdotes
+5. Active voice ONLY - "I love this" not "This is loved"
+6. Use rhetorical questions to engage readers
+7. Occasionally use slang (FYI, IMO) and emoticons (:) or :/) - limit to 2-3 times total
+
+Content Requirements:
+- Create ${itemCount} items, each with EXACTLY 200 words
+- Keep paragraphs short (3-4 sentences)
+- Bold key information using <strong> tags
+- Be concise and clear - no filler phrases
+- Include honest comparisons and genuine insights
+- Each item should have a detailed, specific image prompt for photorealistic generation
+
+Introduction Requirements:
+- Start with a punchy hook
+- Avoid generic openers like "In today's world" or "dive into"
+- Immediately address reader's needs
+
+Conclusion Requirements:
+- Concise summary of key points
+- Engaging final thought or call to action
+- Memorable impression with personal touch
+
+Remember: Output ONLY the JSON object, nothing else.`
+
+    let response;
+    let provider = '';
+
+    // Prefer APIFree if available
+    if (apiFreeKey) {
+        console.log(`Generating text using APIFree.ai (Model: ${apiFreeModel})`)
+        response = await fetch('https://api.apifree.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiFreeKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: apiFreeModel || 'gpt-4o',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.8,
+                max_tokens: 4000
+            })
+        })
+        provider = 'APIFree';
+    } else if (openrouterKey) {
+        console.log(`Generating text using OpenRouter (Model: ${openrouterModel})`)
+        response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${openrouterKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://pickpoynt.com',
+                'X-Title': 'PickPoynt Article Generator'
+            },
+            body: JSON.stringify({
+                model: openrouterModel,
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.8,
+                max_tokens: 8000
+            })
+        })
+        provider = 'OpenRouter';
+    } else {
+        throw new Error('No API Key configured! Please add APIFree.ai Key OR OpenRouter Key in Settings.')
+    }
+
+    if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`${provider} API error: ${response.status} - ${errorText}`)
+    }
+
+    const data = await response.json()
+    const content = data.choices[0].message.content
+
+    // Extract JSON from response (handle markdown code blocks and conversational text)
+    let jsonContent = content.trim()
+    const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
+    if (jsonMatch) {
+        jsonContent = jsonMatch[1].trim()
+    } else if (content.indexOf('{') > -1 && content.lastIndexOf('}') > -1) {
+        // Fallback: search for outermost braces
+        const start = content.indexOf('{')
+        const end = content.lastIndexOf('}') + 1
+        jsonContent = content.substring(start, end).trim()
+    }
+
+    try {
+        const parsed = JSON.parse(jsonContent)
+        return {
+            title: parsed.title,
+            slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+            excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
+            intro: parsed.intro,
+            items: parsed.items,
+            conclusion: parsed.conclusion,
+            tags: [cleanTopic.split(' ')[0], 'Guide', 'Ideas', 'Inspiration', '2024']
+        }
+    } catch (e) {
+        console.error("JSON Parse Error:", e)
+        console.error("Raw Content:", jsonContent)
+        throw new Error(`Failed to parse AI response. The model didn't return valid JSON.`)
+    }
 }
 
 async function generateImages(items: ListicleItem[]) {
