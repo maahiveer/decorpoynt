@@ -72,7 +72,7 @@ async function getApiKeys() {
         const { data, error } = await supabase
             .from('site_settings')
             .select('setting_key, setting_value')
-            .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'openrouter_model', 'apifree_api_key', 'apifree_model'])
+            .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'openrouter_model', 'apifree_api_key', 'apifree_model', 'apifree_image_model'])
 
         if (error || !data) {
             return envKeys
@@ -296,7 +296,8 @@ async function generateImages(items: ListicleItem[] = []) {
                         return { ...item, imageUrl: data.data[0].url }
                     }
                 } else {
-                    console.warn(`APIFree Image Error: ${response.status}`)
+                    const errorData = await response.json().catch(() => ({}))
+                    console.warn(`APIFree Image Error: ${response.status} - ${JSON.stringify(errorData)}`)
                 }
             }
 
@@ -327,17 +328,19 @@ async function generateImages(items: ListicleItem[] = []) {
             }
 
             // Fallback: Pollinations
+            const cleanPrompt = (item.imagePrompt || item.title).replace(/[^a-zA-Z0-9\s]/g, '').substring(0, 500)
             return {
                 ...item,
-                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k")}`
+                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt + " photorealistic quality 4k")}?width=1024&height=1024&nologo=true`
             }
 
         } catch (error) {
             console.error(`Error generating image for item ${index}:`, error)
             // Fallback: Pollinations
+            const cleanPrompt = (item.imagePrompt || item.title).replace(/[^a-zA-Z0-9\s]/g, '').substring(0, 500)
             return {
                 ...item,
-                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k")}`
+                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt + " photorealistic quality 4k")}?width=1024&height=1024&nologo=true`
             }
         }
     })
