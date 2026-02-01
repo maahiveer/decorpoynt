@@ -12,7 +12,8 @@ import {
   User,
   Menu,
   X,
-  FolderOpen
+  FolderOpen,
+  Wand2,
 } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -54,6 +55,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Articles', href: '/admin/articles', icon: FileText },
     { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
     { name: 'New Article', href: '/admin/articles/new', icon: Plus },
+    { name: 'AI Generator', href: '/admin/generator', icon: Wand2 },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ]
 
