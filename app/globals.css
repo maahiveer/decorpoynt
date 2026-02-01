@@ -83,6 +83,8 @@
   -webkit-hyphens: none !important;
   -ms-hyphens: none !important;
   text-align: left !important;
+  white-space: normal !important;
+  /* Force standard wrapping at spaces */
   max-width: 100%;
   overflow-x: hidden;
 }
