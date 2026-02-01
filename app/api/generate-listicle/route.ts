@@ -117,35 +117,31 @@ async function generateArticleContent(topic: string, cleanTopic: string, itemCou
 
 STYLE & TONE:
 - Conversational and Informal: Write like you're talking to a friend.
-- Use everyday language, avoid formal/academic tone.
-- Inject light sarcasm and humor sparingly.
+- Use everyday language.
 - Active voice ONLY.
-- Use rhetorical questions to engage readers.
 - Occasionally use slang (FYI, IMO) and emoticons - limit to 2-3 times total.
 
 STRUCTURE:
 1. Intro: 2-3 paragraph hook (150-200 words).
-2. Items: Create ${itemCount} items based on the topic. Each item should have a title, a 200-word description, and a detailed image prompt.
-3. Conclusion: 100-150 words summarizing key points.
+2. Items: Create ${itemCount} items. Each item should have a title, a 150-200 word description, and a detailed image prompt.
+3. Conclusion: 100 words summary.
 
 RESPONSE FORMAT:
-You MUST respond with ONLY a valid JSON object. Do not include any text before or after the JSON.
+You MUST respond with ONLY a valid JSON object. No markdown code blocks. No intro text. Just the JSON.
 
 JSON SCHEMA:
 {
-  "title": "String - SEO Title",
-  "intro": "String - HTML formatted introduction",
+  "title": "SEO Title",
+  "intro": "HTML introduction",
   "items": [
     {
-      "title": "String - Item Title",
-      "content": "String - HTML formatted content (approx 200 words)",
-      "imagePrompt": "String - Detailed prompt for image generation"
+      "title": "Item Title",
+      "content": "HTML content (150-200 words)",
+      "imagePrompt": "Detailed prompt"
     }
   ],
-  "conclusion": "String - HTML formatted conclusion"
-}
-
-Remember: Output ONLY the JSON object.`
+  "conclusion": "HTML conclusion"
+}`
 
     let response;
     let provider = '';
@@ -204,30 +200,42 @@ Remember: Output ONLY the JSON object.`
 
     const content = data.choices[0].message.content
 
-    // Robust JSON Extraction
-    let jsonContent = content.trim()
+    // Robust JSON Extraction & Repair
+    const extractJson = (str: string) => {
+        // 1. Try markdown blocks
+        const match = str.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
+        if (match) return match[1].trim()
 
-    // 1. Try extracting content within markdown code blocks
-    const codeBlockMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
-    if (codeBlockMatch) {
-        jsonContent = codeBlockMatch[1].trim()
-    } else {
-        // 2. Try finding the first '{' and last '}'
-        const firstBrace = content.indexOf('{')
-        const lastBrace = content.lastIndexOf('}')
-        if (firstBrace !== -1 && lastBrace !== -1) {
-            jsonContent = content.substring(firstBrace, lastBrace + 1).trim()
-        }
+        // 2. Try braces
+        const first = str.indexOf('{')
+        const last = str.lastIndexOf('}')
+        if (first !== -1 && last !== -1) return str.substring(first, last + 1).trim()
+
+        // 3. Fallback to start point if truncated
+        if (first !== -1) return str.substring(first).trim()
+
+        return str.trim()
     }
 
-    try {
-        // Simple Cleanup: Remove potentially breaking characters/formatting if common
-        // (Like trailing commas before closing braces/brackets)
-        const sanitizedJson = jsonContent
-            .replace(/,\s*}/g, '}')
-            .replace(/,\s*\]/g, ']')
+    const tryRepairJson = (str: string) => {
+        let json = str;
+        // Basic cleanup
+        json = json.replace(/,\s*}/g, '}').replace(/,\s*\]/g, ']')
 
-        const parsed = JSON.parse(sanitizedJson)
+        // Try to close unclosed sequences if truncated
+        let openBraces = (json.match(/{/g) || []).length - (json.match(/}/g) || []).length
+        let openBrackets = (json.match(/\[/g) || []).length - (json.match(/\]/g) || []).length
+
+        while (openBrackets > 0) { json += ']'; openBrackets--; }
+        while (openBraces > 0) { json += '}'; openBraces--; }
+
+        return json
+    }
+
+    const rawJson = extractJson(content)
+
+    try {
+        const parsed = JSON.parse(tryRepairJson(rawJson))
 
         return {
             title: parsed.title || topic,
@@ -240,7 +248,19 @@ Remember: Output ONLY the JSON object.`
         }
     } catch (e) {
         console.error("JSON Parse Error:", e)
-        console.error("Raw Content Sample:", content.substring(0, 500) + "...")
+        // If it still fails, let's try a very basic regex extraction for the intro at least
+        const introMatch = content.match(/"intro":\s*"([\s\S]*?)"/)
+        if (introMatch) {
+            return {
+                title: topic,
+                slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+                excerpt: introMatch[1].substring(0, 160).replace(/<[^>]*>/g, '') + '...',
+                intro: introMatch[1],
+                items: [],
+                conclusion: 'Content truncated during generation.',
+                tags: [cleanTopic.split(' ')[0], 'Guide']
+            }
+        }
         throw new Error(`Failed to parse AI response. The model didn't return valid JSON. Error: ${e instanceof Error ? e.message : 'Unknown'}`)
     }
 }
