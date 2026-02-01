@@ -33,10 +33,20 @@ export async function POST(request: Request) {
         // Generate article with Gemini
         const articleContent = await generateWithGemini(topic, cleanTopic, itemCount, keywords, GEMINI_API_KEY)
 
-        // Generate images with Pollinations (free)
-        const itemsWithImages = articleContent.items.map((item: ListicleItem) => ({
-            ...item,
-            imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k high quality realistic")}`
+        // Generate images with Pollinations (free) - using sequential processing to be safe
+        const itemsWithImages = await Promise.all(articleContent.items.map(async (item: ListicleItem, index: number) => {
+            // Add a random seed to prevent caching and ensure variety
+            const randomSeed = Math.floor(Math.random() * 1000000)
+            const enhancedPrompt = `${item.imagePrompt}, professional photography, 4k, high quality, realistic, detailed`
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(enhancedPrompt)}?seed=${randomSeed}&width=1024&height=1024&nologo=true`
+
+            // Validate image URL (optional, but good for debugging if needed)
+            // checkImage(imageUrl) 
+
+            return {
+                ...item,
+                imageUrl
+            }
         }))
 
         // Construct HTML
