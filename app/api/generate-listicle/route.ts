@@ -55,28 +55,51 @@ async function generateArticleContent(topic: string, cleanTopic: string, itemCou
         throw new Error('OPENROUTER_API_KEY not configured')
     }
 
-    const prompt = `You are a professional blog writer. Create a listicle article about "${topic}".
+    const prompt = `Write a 1,500-word SEO article titled "${topic}" that is both engaging and informative. The article must be written as if you are having a friendly, informal conversation with a fellow enthusiast.
 
-Generate a JSON response with this exact structure:
+CRITICAL FORMATTING REQUIREMENT: You MUST respond with ONLY valid JSON in this exact structure (no markdown, no code blocks, just pure JSON):
+
 {
-  "title": "SEO-optimized title for the article",
-  "intro": "Engaging 2-paragraph introduction (100-150 words)",
+  "title": "SEO-optimized title",
+  "intro": "2-3 paragraph introduction (150-200 words)",
   "items": [
     {
-      "title": "Item 1 title",
-      "content": "Detailed 200-word description of this item",
-      "imagePrompt": "Detailed image generation prompt for this specific item"
+      "title": "Item title",
+      "content": "200-word description",
+      "imagePrompt": "detailed image prompt"
     }
-    // ... ${itemCount} items total
   ],
-  "conclusion": "Compelling conclusion paragraph (100 words)"
+  "conclusion": "Conclusion paragraph (100-150 words)"
 }
 
-Requirements:
-- Each item must have EXACTLY 200 words of engaging, informative content
-- Image prompts should be detailed and specific for photorealistic generation
-- Make content SEO-friendly and reader-engaging
-- Focus on practical, actionable information`
+Style & Tone Requirements:
+1. Conversational and Informal - Write as if talking to a friend
+2. Use everyday language, avoid formal/academic tone
+3. Inject light sarcasm and humor sparingly
+4. Include personal opinions or anecdotes
+5. Active voice ONLY - "I love this" not "This is loved"
+6. Use rhetorical questions to engage readers
+7. Occasionally use slang (FYI, IMO) and emoticons (:) or :/) - limit to 2-3 times total
+
+Content Requirements:
+- Create ${itemCount} items, each with EXACTLY 200 words
+- Keep paragraphs short (3-4 sentences)
+- Bold key information using <strong> tags
+- Be concise and clear - no filler phrases
+- Include honest comparisons and genuine insights
+- Each item should have a detailed, specific image prompt for photorealistic generation
+
+Introduction Requirements:
+- Start with a punchy hook
+- Avoid generic openers like "In today's world" or "dive into"
+- Immediately address reader's needs
+
+Conclusion Requirements:
+- Concise summary of key points
+- Engaging final thought or call to action
+- Memorable impression with personal touch
+
+Remember: Output ONLY the JSON object, nothing else.`
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -94,7 +117,7 @@ Requirements:
                     content: prompt
                 }
             ],
-            temperature: 0.7,
+            temperature: 0.8,
             max_tokens: 8000
         })
     })
@@ -108,10 +131,14 @@ Requirements:
     const content = data.choices[0].message.content
 
     // Extract JSON from response (handle markdown code blocks)
-    let jsonContent = content
-    const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/)
-    if (jsonMatch) {
-        jsonContent = jsonMatch[1]
+    let jsonContent = content.trim()
+
+    // Remove markdown code blocks if present
+    if (jsonContent.startsWith('```')) {
+        const jsonMatch = jsonContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
+        if (jsonMatch) {
+            jsonContent = jsonMatch[1]
+        }
     }
 
     const parsed = JSON.parse(jsonContent)
@@ -119,7 +146,7 @@ Requirements:
     return {
         title: parsed.title,
         slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        excerpt: parsed.intro.substring(0, 160) + '...',
+        excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
         intro: parsed.intro,
         items: parsed.items,
         conclusion: parsed.conclusion,
@@ -134,7 +161,7 @@ async function generateImages(items: ListicleItem[]) {
         console.warn('REPLICATE_API_TOKEN not configured, using fallback images')
         return items.map((item, index) => ({
             ...item,
-            imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k")}`
+            imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k high quality")}`
         }))
     }
 
@@ -150,8 +177,8 @@ async function generateImages(items: ListicleItem[]) {
                 body: JSON.stringify({
                     version: 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b',
                     input: {
-                        prompt: item.imagePrompt + ", professional photography, high quality, 4k, detailed",
-                        negative_prompt: "ugly, blurry, low quality, distorted, watermark",
+                        prompt: item.imagePrompt + ", professional photography, high quality, 4k, detailed, photorealistic",
+                        negative_prompt: "ugly, blurry, low quality, distorted, watermark, text, cartoon, anime",
                         width: 1024,
                         height: 1024
                     }
@@ -209,7 +236,7 @@ async function pollPrediction(predictionId: string, token: string, maxAttempts =
 }
 
 function constructHTML(articleContent: any, itemsWithImages: any[]) {
-    let html = `<p class="lead">${articleContent.intro}</p>\n\n`
+    let html = `<div class="article-intro">${articleContent.intro}</div>\n\n`
 
     itemsWithImages.forEach((item, index) => {
         html += `
@@ -220,13 +247,13 @@ function constructHTML(articleContent: any, itemsWithImages: any[]) {
   <figcaption style="text-align: center; margin-top: 12px; color: #64748b; font-size: 0.9rem; font-style: italic;">${item.title}</figcaption>
 </figure>
 
-<p>${item.content}</p>
+<div class="item-content">${item.content}</div>
 
 ${index < itemsWithImages.length - 1 ? '<hr style="margin: 50px 0; border: 0; border-top: 1px solid #e2e8f0;" />' : ''}
 `
     })
 
-    html += `\n<h2>Final Thoughts</h2>\n<p>${articleContent.conclusion}</p>`
+    html += `\n<h2>Final Thoughts</h2>\n<div class="conclusion">${articleContent.conclusion}</div>`
 
     return html
 }
