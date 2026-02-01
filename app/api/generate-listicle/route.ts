@@ -207,6 +207,12 @@ Remember: Output ONLY the JSON object, nothing else.`
     }
 
     const data = await response.json()
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        console.error('Unexpected AI response format:', data)
+        throw new Error(`The AI service returned an unexpected response format. Please check your API key and quota.`)
+    }
+
     const content = data.choices[0].message.content
 
     // Extract JSON from response (handle markdown code blocks and conversational text)
@@ -239,8 +245,10 @@ Remember: Output ONLY the JSON object, nothing else.`
     }
 }
 
-async function generateImages(items: ListicleItem[]) {
+async function generateImages(items: ListicleItem[] = []) {
     const { replicateToken, apiFreeKey, apiFreeImageModel } = await getApiKeys()
+
+    if (!items || !Array.isArray(items)) return []
 
     // Generate images in parallel
     const imagePromises = items.map(async (item, index) => {
@@ -324,7 +332,9 @@ async function pollPrediction(predictionId: string, token: string, maxAttempts =
             headers: { 'Authorization': `Token ${token}` }
         })
         const prediction = await response.json()
-        if (prediction.status === 'succeeded') return prediction.output[0]
+        if (prediction.status === 'succeeded') {
+            return (prediction.output && prediction.output.length > 0) ? prediction.output[0] : null
+        }
         if (prediction.status === 'failed') throw new Error('Image generation failed')
     }
     return null
