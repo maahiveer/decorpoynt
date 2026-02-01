@@ -5,9 +5,12 @@ import { useRouter } from 'next/navigation'
 import { Wand2, Sparkles, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
+type GeneratorMode = 'quick' | 'advanced'
+
 export default function GeneratorPage() {
     const router = useRouter()
     const [topic, setTopic] = useState('')
+    const [mode, setMode] = useState<GeneratorMode>('quick')
     const [isGenerating, setIsGenerating] = useState(false)
     const [error, setError] = useState('')
     const [loadingStep, setLoadingStep] = useState('')
@@ -18,16 +21,24 @@ export default function GeneratorPage() {
 
         setIsGenerating(true)
         setError('')
-        setLoadingStep('Initializing AI specific agents...')
 
-        try {
-            // Simulate steps for better UX
+        const endpoint = mode === 'advanced' ? '/api/generate-listicle' : '/api/generate-article'
+
+        if (mode === 'advanced') {
+            setLoadingStep('🤖 Connecting to OpenRouter AI...')
+            setTimeout(() => setLoadingStep('✍️ Writing 200-word descriptions for each idea...'), 2000)
+            setTimeout(() => setLoadingStep('🎨 Generating high-quality images via Replicate...'), 8000)
+            setTimeout(() => setLoadingStep('🔧 Assembling your professional article...'), 15000)
+        } else {
+            setLoadingStep('Initializing AI specific agents...')
             setTimeout(() => setLoadingStep('Analyzing topic trends...'), 1000)
             setTimeout(() => setLoadingStep('Drafting structured content...'), 2500)
             setTimeout(() => setLoadingStep('Generating professional imagery...'), 4500)
             setTimeout(() => setLoadingStep('Finalizing formatted article...'), 6000)
+        }
 
-            const response = await fetch('/api/generate-article', {
+        try {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topic }),
@@ -53,7 +64,7 @@ export default function GeneratorPage() {
                     tags: generatedData.tags,
                     status: 'draft',
                     created_at: new Date().toISOString(),
-                    author_id: null // Or fetch current user ID
+                    author_id: null
                 })
                 .select()
                 .single()
@@ -88,6 +99,38 @@ export default function GeneratorPage() {
                 <div className="p-8 md:p-12">
                     {!isGenerating ? (
                         <form onSubmit={handleGenerate} className="space-y-6">
+                            {/* Mode Selection */}
+                            <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl">
+                                <button
+                                    type="button"
+                                    onClick={() => setMode('quick')}
+                                    className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'quick'
+                                            ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
+                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                                        }`}
+                                >
+                                    ⚡ Quick Generate
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setMode('advanced')}
+                                    className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'advanced'
+                                            ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
+                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                                        }`}
+                                >
+                                    🚀 Advanced AI
+                                </button>
+                            </div>
+
+                            {mode === 'advanced' && (
+                                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                    <p className="text-sm text-blue-800 dark:text-blue-300">
+                                        <strong>Advanced Mode:</strong> Uses OpenRouter AI for 200-word detailed descriptions per item + Replicate for high-quality images. Requires API keys in .env.local
+                                    </p>
+                                </div>
+                            )}
+
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                                     What would you like to write about?
@@ -118,7 +161,7 @@ export default function GeneratorPage() {
                                 className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                             >
                                 <Wand2 className="h-5 w-5" />
-                                <span>Generate Article Magic</span>
+                                <span>{mode === 'advanced' ? 'Generate Premium Article' : 'Generate Article Magic'}</span>
                             </button>
                         </form>
                     ) : (
@@ -135,7 +178,10 @@ export default function GeneratorPage() {
                                 {loadingStep}
                             </p>
                             <p className="mt-8 text-sm text-slate-500 max-w-md mx-auto">
-                                Our AI is researching, writing, and generating custom imagery for "{topic}". This usually takes about 10-15 seconds.
+                                {mode === 'advanced'
+                                    ? `Creating premium content with 200-word descriptions and high-quality images for "${topic}". This may take 20-30 seconds.`
+                                    : `Our AI is researching, writing, and generating custom imagery for "${topic}". This usually takes about 10-15 seconds.`
+                                }
                             </p>
                         </div>
                     )}
