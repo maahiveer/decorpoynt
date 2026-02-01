@@ -14,6 +14,7 @@ export default function SettingsPage() {
     const [openrouterKey, setOpenrouterKey] = useState('')
     const [replicateKey, setReplicateKey] = useState('')
     const [geminiKey, setGeminiKey] = useState('')
+    const [openRouterModel, setOpenRouterModel] = useState('anthropic/claude-3.5-sonnet') // New state
     const [showOpenrouterKey, setShowOpenrouterKey] = useState(false)
     const [showReplicateKey, setShowReplicateKey] = useState(false)
     const [showGeminiKey, setShowGeminiKey] = useState(false)
@@ -32,7 +33,7 @@ export default function SettingsPage() {
             const { data, error } = await supabase
                 .from('site_settings')
                 .select('setting_key, setting_value')
-                .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'gemini_api_key'])
+                .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'gemini_api_key', 'openrouter_model']) // Added openrouter_model
 
             if (error) throw error
 
@@ -41,10 +42,12 @@ export default function SettingsPage() {
                 const openrouterData = settings.find(s => s.setting_key === 'openrouter_api_key')
                 const replicateData = settings.find(s => s.setting_key === 'replicate_api_token')
                 const geminiData = settings.find(s => s.setting_key === 'gemini_api_key')
+                const modelData = settings.find(s => s.setting_key === 'openrouter_model') // New
 
                 setOpenrouterKey(openrouterData?.setting_value || '')
                 setReplicateKey(replicateData?.setting_value || '')
                 setGeminiKey(geminiData?.setting_value || '')
+                setOpenRouterModel(modelData?.setting_value || 'anthropic/claude-3.5-sonnet') // New
             }
         } catch (error) {
             console.error('Error fetching settings:', error)
@@ -60,29 +63,6 @@ export default function SettingsPage() {
         setSuccess('')
 
         try {
-            // Update OpenRouter API Key
-            const { error: openrouterError } = await supabase
-                .from('site_settings')
-                .upsert({
-                    setting_key: 'openrouter_api_key',
-                    setting_value: openrouterKey.trim() || null,
-                    updated_at: new Date().toISOString()
-                }, {
-                    onConflict: 'setting_key'
-                })
-
-            if (openrouterError) throw openrouterError
-
-            // Update Replicate API Token
-            const { error: replicateError } = await supabase
-                .from('site_settings')
-                .upsert({
-                    setting_key: 'replicate_api_token',
-                    setting_value: replicateKey.trim() || null,
-                    updated_at: new Date().toISOString()
-                }, {
-                    onConflict: 'setting_key'
-                })
 
             if (replicateError) throw replicateError
 
@@ -186,6 +166,27 @@ export default function SettingsPage() {
                         </div>
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                             <strong className="text-green-600 dark:text-green-400">FREE!</strong> Used for generating article text with Gemini Pro (60 requests/min free tier)
+                        </p>
+                    </div>
+
+                    {/* OpenRouter Model ID Setting */}
+                    <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+                        <label htmlFor="openrouter-model" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="h-4 w-4 text-purple-500" />
+                                OpenRouter Model ID (Premium)
+                            </div>
+                        </label>
+                        <input
+                            id="openrouter-model"
+                            type="text"
+                            value={openRouterModel}
+                            onChange={(e) => setOpenRouterModel(e.target.value)}
+                            className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
+                            placeholder="anthropic/claude-3.5-sonnet"
+                        />
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                            Default: <code>anthropic/claude-3.5-sonnet</code>. You can change this to <code>openai/gpt-4o</code> or any other OpenRouter model ID.
                         </p>
                     </div>
 
