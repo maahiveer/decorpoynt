@@ -67,6 +67,14 @@
 /* Natural Article Content - Preserves HTML colors */
 .article-content {
   overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.article-content * {
+  max-width: 100%;
 }
 
 .article-content h1 {
