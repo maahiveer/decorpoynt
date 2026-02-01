@@ -82,6 +82,7 @@
   /* STRICTLY DISABLE HYPHENS */
   -webkit-hyphens: none !important;
   -ms-hyphens: none !important;
+  text-align: left !important;
   max-width: 100%;
   overflow-x: hidden;
 }
