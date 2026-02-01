@@ -5,12 +5,9 @@ import { useRouter } from 'next/navigation'
 import { Wand2, Sparkles, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
-type GeneratorMode = 'quick' | 'advanced'
-
 export default function GeneratorPage() {
     const router = useRouter()
     const [topic, setTopic] = useState('')
-    const [mode, setMode] = useState<GeneratorMode>('advanced')
     const [isGenerating, setIsGenerating] = useState(false)
     const [error, setError] = useState('')
     const [loadingStep, setLoadingStep] = useState('')
@@ -23,20 +20,13 @@ export default function GeneratorPage() {
         setIsGenerating(true)
         setError('')
 
+        // Always use premium endpoint (OpenRouter + Replicate)
+        const endpoint = '/api/generate-listicle'
 
-        const endpoint = mode === 'advanced' ? '/api/generate-gemini' : '/api/generate-article'
-        if (mode === 'advanced') {
-            setLoadingStep('🤖 Connecting to OpenRouter AI...')
-            setTimeout(() => setLoadingStep('✍️ Writing 200-word descriptions for each idea...'), 2000)
-            setTimeout(() => setLoadingStep('🎨 Generating high-quality images via Replicate...'), 8000)
-            setTimeout(() => setLoadingStep('🔧 Assembling your professional article...'), 15000)
-        } else {
-            setLoadingStep('Initializing AI specific agents...')
-            setTimeout(() => setLoadingStep('Analyzing topic trends...'), 1000)
-            setTimeout(() => setLoadingStep('Drafting structured content...'), 2500)
-            setTimeout(() => setLoadingStep('Generating professional imagery...'), 4500)
-            setTimeout(() => setLoadingStep('Finalizing formatted article...'), 6000)
-        }
+        setLoadingStep('🤖 Connecting to OpenRouter AI...')
+        setTimeout(() => setLoadingStep('✍️ Writing detailed content...'), 2000)
+        setTimeout(() => setLoadingStep('🎨 Generating high-quality images via Replicate...'), 8000)
+        setTimeout(() => setLoadingStep('🔧 Assembling your professional article...'), 15000)
 
         try {
             const response = await fetch(endpoint, {
@@ -51,6 +41,8 @@ export default function GeneratorPage() {
             }
 
             const generatedData = await response.json()
+
+            // ... (rest of the logic remains same)
 
             setLoadingStep('Saving to database...')
 
@@ -101,37 +93,12 @@ export default function GeneratorPage() {
                 <div className="p-8 md:p-12">
                     {!isGenerating ? (
                         <form onSubmit={handleGenerate} className="space-y-6">
-                            {/* Mode Selection */}
-                            <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl">
-                                <button
-                                    type="button"
-                                    onClick={() => setMode('quick')}
-                                    className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'quick'
-                                        ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
-                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                                        }`}
-                                >
-                                    ⚡ Quick Generate
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setMode('advanced')}
-                                    className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'advanced'
-                                        ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
-                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                                        }`}
-                                >
-                                    🚀 Advanced AI
-                                </button>
+                            {/* Premium Info */}
+                            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                                <p className="text-sm text-purple-800 dark:text-purple-300">
+                                    <strong>Premium AI Generator:</strong> Powered by OpenRouter (Claude 3.5) for text and Replicate for photorealistic images.
+                                </p>
                             </div>
-
-                            {mode === 'advanced' && (
-                                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                                    <p className="text-sm text-blue-800 dark:text-blue-300">
-                                        <strong>Advanced Mode (Premium):</strong> Uses OpenRouter AI for text + Replicate for high-quality images. Requires API keys in Settings.
-                                    </p>
-                                </div>
-                            )}
 
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -179,7 +146,7 @@ export default function GeneratorPage() {
                                 className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-lg rounded-xl shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                             >
                                 <Wand2 className="h-5 w-5" />
-                                <span>{mode === 'advanced' ? 'Generate Premium Article' : 'Generate Article Magic'}</span>
+                                <span>Generate Premium Article</span>
                             </button>
                         </form>
                     ) : (
@@ -196,10 +163,7 @@ export default function GeneratorPage() {
                                 {loadingStep}
                             </p>
                             <p className="mt-8 text-sm text-slate-500 max-w-md mx-auto">
-                                {mode === 'advanced'
-                                    ? `Creating premium content with 200-word descriptions and high-quality images for "${topic}". This may take 20-30 seconds.`
-                                    : `Our AI is researching, writing, and generating custom imagery for "${topic}". This usually takes about 10-15 seconds.`
-                                }
+                                Creating premium content with 200-word descriptions and high-quality images for "{topic}". This may take 30-60 seconds.
                             </p>
                             <button
                                 onClick={() => {
