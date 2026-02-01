@@ -103,7 +103,53 @@ async function generateArticleContent(topic: string, cleanTopic: string, itemCou
         throw new Error('OPENROUTER_API_KEY not configured. Please add it in Settings.')
     }
 
-    // ... (rest of function)
+    const keywordsSection = keywords ? `\n\nSEO KEYWORDS TO INCORPORATE:\n${keywords}\n\nNaturally weave these keywords throughout the article for SEO optimization.` : ''
+
+    const prompt = `Write a 1,500-word SEO article titled "${topic}" that is both engaging and informative. The article must be written as if you are having a friendly, informal conversation with a fellow enthusiast.${keywordsSection}
+
+CRITICAL FORMATTING REQUIREMENT: You MUST respond with ONLY valid JSON in this exact structure (no markdown, no code blocks, just pure JSON):
+
+{
+  "title": "SEO-optimized title",
+  "intro": "2-3 paragraph introduction (150-200 words)",
+  "items": [
+    {
+      "title": "Item title",
+      "content": "200-word description",
+      "imagePrompt": "detailed image prompt"
+    }
+  ],
+  "conclusion": "Conclusion paragraph (100-150 words)"
+}
+
+Style & Tone Requirements:
+1. Conversational and Informal - Write as if talking to a friend
+2. Use everyday language, avoid formal/academic tone
+3. Inject light sarcasm and humor sparingly
+4. Include personal opinions or anecdotes
+5. Active voice ONLY - "I love this" not "This is loved"
+6. Use rhetorical questions to engage readers
+7. Occasionally use slang (FYI, IMO) and emoticons (:) or :/) - limit to 2-3 times total
+
+Content Requirements:
+- Create ${itemCount} items, each with EXACTLY 200 words
+- Keep paragraphs short (3-4 sentences)
+- Bold key information using <strong> tags
+- Be concise and clear - no filler phrases
+- Include honest comparisons and genuine insights
+- Each item should have a detailed, specific image prompt for photorealistic generation
+
+Introduction Requirements:
+- Start with a punchy hook
+- Avoid generic openers like "In today's world" or "dive into"
+- Immediately address reader's needs
+
+Conclusion Requirements:
+- Concise summary of key points
+- Engaging final thought or call to action
+- Memorable impression with personal touch
+
+Remember: Output ONLY the JSON object, nothing else.`
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -114,7 +160,7 @@ async function generateArticleContent(topic: string, cleanTopic: string, itemCou
             'X-Title': 'PickPoynt Article Generator'
         },
         body: JSON.stringify({
-            model: openrouterModel, // Use configured model
+            model: openrouterModel,
             messages: [
                 {
                     role: 'user',
@@ -125,47 +171,37 @@ async function generateArticleContent(topic: string, cleanTopic: string, itemCou
             max_tokens: 8000
         })
     })
-    messages: [
-        {
-            role: 'user',
-            content: prompt
-        }
-    ],
-        temperature: 0.8,
-            max_tokens: 8000
-})
-    })
 
-if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`)
-}
-
-const data = await response.json()
-const content = data.choices[0].message.content
-
-// Extract JSON from response (handle markdown code blocks)
-let jsonContent = content.trim()
-
-// Remove markdown code blocks if present
-if (jsonContent.startsWith('```')) {
-    const jsonMatch = jsonContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
-    if (jsonMatch) {
-        jsonContent = jsonMatch[1]
+    if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`)
     }
-}
 
-const parsed = JSON.parse(jsonContent)
+    const data = await response.json()
+    const content = data.choices[0].message.content
 
-return {
-    title: parsed.title,
-    slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-    excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
-    intro: parsed.intro,
-    items: parsed.items,
-    conclusion: parsed.conclusion,
-    tags: [cleanTopic.split(' ')[0], 'Guide', 'Ideas', 'Inspiration', '2024']
-}
+    // Extract JSON from response (handle markdown code blocks)
+    let jsonContent = content.trim()
+
+    // Remove markdown code blocks if present
+    if (jsonContent.startsWith('```')) {
+        const jsonMatch = jsonContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
+        if (jsonMatch) {
+            jsonContent = jsonMatch[1]
+        }
+    }
+
+    const parsed = JSON.parse(jsonContent)
+
+    return {
+        title: parsed.title,
+        slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
+        intro: parsed.intro,
+        items: parsed.items,
+        conclusion: parsed.conclusion,
+        tags: [cleanTopic.split(' ')[0], 'Guide', 'Ideas', 'Inspiration', '2024']
+    }
 }
 
 async function generateImages(items: ListicleItem[]) {
