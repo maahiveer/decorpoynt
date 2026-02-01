@@ -32,6 +32,20 @@ if (supabaseUrl &&
   supabase = createMockClient()
 }
 
+const mockBuilder = {
+  select: () => mockBuilder,
+  insert: () => mockBuilder,
+  update: () => mockBuilder,
+  delete: () => mockBuilder,
+  eq: () => mockBuilder,
+  order: () => mockBuilder,
+  limit: () => mockBuilder,
+  single: () => Promise.resolve({ data: null, error: null }),
+  maybeSingle: () => Promise.resolve({ data: null, error: null }),
+  match: () => mockBuilder,
+  then: (resolve: any) => resolve({ data: [], error: null })
+}
+
 function createMockClient() {
   return {
     auth: {
@@ -40,18 +54,10 @@ function createMockClient() {
       signInWithPassword: () => Promise.resolve({ error: new Error('Supabase not configured') }),
       signUp: () => Promise.resolve({ error: new Error('Supabase not configured') }),
       signOut: () => Promise.resolve({ error: null }),
-      signInWithOtp: () => Promise.resolve({ error: new Error('Supabase not configured') })
+      signInWithOtp: () => Promise.resolve({ error: new Error('Supabase not configured') }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
     },
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          order: () => Promise.resolve({ data: [], error: null })
-        })
-      }),
-      insert: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-      update: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-      delete: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') })
-    })
+    from: () => mockBuilder
   }
 }
 
