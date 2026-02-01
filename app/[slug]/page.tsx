@@ -284,7 +284,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
             {/* Article Content */}
             <div className="p-6 md:p-12">
-              <div className="prose prose-lg prose-slate dark:prose-invert max-w-none article-content">
+              <div
+                className="prose prose-lg prose-slate dark:prose-invert max-w-none article-content"
+                style={{
+                  wordBreak: 'normal',
+                  overflowWrap: 'break-word',
+                  hyphens: 'none',
+                  WebkitHyphens: 'none'
+                }}
+              >
                 <ArticleRenderer content={finalContent} />
               </div>
             </div>
