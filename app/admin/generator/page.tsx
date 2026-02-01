@@ -14,6 +14,7 @@ export default function GeneratorPage() {
     const [isGenerating, setIsGenerating] = useState(false)
     const [error, setError] = useState('')
     const [loadingStep, setLoadingStep] = useState('')
+    const [keywords, setKeywords] = useState('')
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -41,7 +42,7 @@ export default function GeneratorPage() {
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ topic }),
+                body: JSON.stringify({ topic, keywords }),
             })
 
             if (!response.ok) {
@@ -105,8 +106,8 @@ export default function GeneratorPage() {
                                     type="button"
                                     onClick={() => setMode('quick')}
                                     className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'quick'
-                                            ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
-                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                                        ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
+                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                                         }`}
                                 >
                                     ⚡ Quick Generate
@@ -115,8 +116,8 @@ export default function GeneratorPage() {
                                     type="button"
                                     onClick={() => setMode('advanced')}
                                     className={`py-3 px-4 rounded-lg font-medium transition-all ${mode === 'advanced'
-                                            ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
-                                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                                        ? 'bg-white dark:bg-slate-800 text-purple-600 shadow-md'
+                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                                         }`}
                                 >
                                     🚀 Advanced AI
@@ -141,11 +142,27 @@ export default function GeneratorPage() {
                                         value={topic}
                                         onChange={(e) => setTopic(e.target.value)}
                                         placeholder="e.g., 12 cozy sweater outfits for work"
-                                        className="w-full px-6 py-4 text-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                                        className="w-full px-6 py-4 text-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
                                         required
                                     />
                                     <Sparkles className="absolute right-4 top-1/2 transform -translate-y-1/2 text-purple-500 h-6 w-6 animate-pulse" />
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                    Keywords (Optional)
+                                </label>
+                                <textarea
+                                    value={keywords}
+                                    onChange={(e) => setKeywords(e.target.value)}
+                                    placeholder="Enter keywords separated by commas (e.g., fashion, winter, office wear)"
+                                    rows={3}
+                                    className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
+                                />
+                                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                    Add relevant keywords to improve SEO and content relevance
+                                </p>
                             </div>
 
                             {error && (
@@ -183,6 +200,16 @@ export default function GeneratorPage() {
                                     : `Our AI is researching, writing, and generating custom imagery for "${topic}". This usually takes about 10-15 seconds.`
                                 }
                             </p>
+                            <button
+                                onClick={() => {
+                                    setIsGenerating(false)
+                                    setError('')
+                                    setLoadingStep('')
+                                }}
+                                className="mt-6 px-6 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                            >
+                                Cancel
+                            </button>
                         </div>
                     )}
                 </div>
