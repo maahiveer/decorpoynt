@@ -54,12 +54,16 @@ async function getApiKeys() {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
         const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
+        const envKeys = {
+            openrouterKey: process.env.OPENROUTER_API_KEY,
+            replicateToken: process.env.REPLICATE_API_TOKEN,
+            openrouterModel: 'anthropic/claude-3.5-sonnet',
+            apiFreeKey: process.env.APIFREE_API_KEY,
+            apiFreeModel: 'gpt-4o'
+        }
+
         if (!supabaseUrl || !supabaseKey) {
-            return {
-                openrouterKey: process.env.OPENROUTER_API_KEY,
-                replicateToken: process.env.REPLICATE_API_TOKEN,
-                openrouterModel: 'anthropic/claude-3.5-sonnet'
-            }
+            return envKeys
         }
 
         const supabase = createClient(supabaseUrl, supabaseKey)
@@ -67,44 +71,44 @@ async function getApiKeys() {
         const { data, error } = await supabase
             .from('site_settings')
             .select('setting_key, setting_value')
-            .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'openrouter_model'])
+            .in('setting_key', ['openrouter_api_key', 'replicate_api_token', 'openrouter_model', 'apifree_api_key', 'apifree_model'])
 
         if (error || !data) {
-            return {
-                openrouterKey: process.env.OPENROUTER_API_KEY,
-                replicateToken: process.env.REPLICATE_API_TOKEN,
-                openrouterModel: 'anthropic/claude-3.5-sonnet'
-            }
+            return envKeys
         }
 
         const openrouterSetting = data.find(s => s.setting_key === 'openrouter_api_key')
         const replicateSetting = data.find(s => s.setting_key === 'replicate_api_token')
         const modelSetting = data.find(s => s.setting_key === 'openrouter_model')
 
+        const apiFreeKeySetting = data.find(s => s.setting_key === 'apifree_api_key')
+        const apiFreeModelSetting = data.find(s => s.setting_key === 'apifree_model')
+
         return {
-            openrouterKey: openrouterSetting?.setting_value || process.env.OPENROUTER_API_KEY,
-            replicateToken: replicateSetting?.setting_value || process.env.REPLICATE_API_TOKEN,
-            openrouterModel: modelSetting?.setting_value || 'anthropic/claude-3.5-sonnet'
+            openrouterKey: openrouterSetting?.setting_value || envKeys.openrouterKey,
+            replicateToken: replicateSetting?.setting_value || envKeys.replicateToken,
+            openrouterModel: modelSetting?.setting_value || envKeys.openrouterModel,
+            apiFreeKey: apiFreeKeySetting?.setting_value || envKeys.apiFreeKey,
+            apiFreeModel: apiFreeModelSetting?.setting_value || envKeys.apiFreeModel
         }
     } catch (error) {
         console.error('Error fetching API keys from database:', error)
         return {
             openrouterKey: process.env.OPENROUTER_API_KEY,
             replicateToken: process.env.REPLICATE_API_TOKEN,
-            openrouterModel: 'anthropic/claude-3.5-sonnet'
+            openrouterModel: 'anthropic/claude-3.5-sonnet',
+            apiFreeKey: process.env.APIFREE_API_KEY,
+            apiFreeModel: 'gpt-4o'
         }
     }
 }
 
 async function generateArticleContent(topic: string, cleanTopic: string, itemCount: number, keywords?: string) {
-    const { openrouterKey: OPENROUTER_API_KEY, openrouterModel } = await getApiKeys()
-
-    if (!OPENROUTER_API_KEY) {
-        throw new Error('OPENROUTER_API_KEY not configured. Please add it in Settings.')
-    }
+    const { openrouterKey, openrouterModel, apiFreeKey, apiFreeModel } = await getApiKeys()
 
     const keywordsSection = keywords ? `\n\nSEO KEYWORDS TO INCORPORATE:\n${keywords}\n\nNaturally weave these keywords throughout the article for SEO optimization.` : ''
 
+    // Construct Prompt (Same for both providers)
     const prompt = `Write a 1,500-word SEO article titled "${topic}" that is both engaging and informative. The article must be written as if you are having a friendly, informal conversation with a fellow enthusiast.${keywordsSection}
 
 CRITICAL FORMATTING REQUIREMENT: You MUST respond with ONLY valid JSON in this exact structure (no markdown, no code blocks, just pure JSON):
@@ -151,30 +155,51 @@ Conclusion Requirements:
 
 Remember: Output ONLY the JSON object, nothing else.`
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://pickpoynt.com',
-            'X-Title': 'PickPoynt Article Generator'
-        },
-        body: JSON.stringify({
-            model: openrouterModel,
-            messages: [
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            temperature: 0.8,
-            max_tokens: 8000
+    let response;
+    let provider = '';
+
+    // Prefer APIFree if available
+    if (apiFreeKey) {
+        console.log(`Generating text using APIFree.ai (Model: ${apiFreeModel})`)
+        response = await fetch('https://api.apifree.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiFreeKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: apiFreeModel || 'gpt-4o',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.8,
+                max_tokens: 4000
+            })
         })
-    })
+        provider = 'APIFree';
+    } else if (openrouterKey) {
+        console.log(`Generating text using OpenRouter (Model: ${openrouterModel})`)
+        response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${openrouterKey}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://pickpoynt.com',
+                'X-Title': 'PickPoynt Article Generator'
+            },
+            body: JSON.stringify({
+                model: openrouterModel,
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.8,
+                max_tokens: 8000
+            })
+        })
+        provider = 'OpenRouter';
+    } else {
+        throw new Error('No API Key configured! Please add APIFree.ai Key OR OpenRouter Key in Settings.')
+    }
 
     if (!response.ok) {
         const errorText = await response.text()
-        throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`)
+        throw new Error(`${provider} API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
@@ -182,77 +207,99 @@ Remember: Output ONLY the JSON object, nothing else.`
 
     // Extract JSON from response (handle markdown code blocks)
     let jsonContent = content.trim()
-
-    // Remove markdown code blocks if present
     if (jsonContent.startsWith('```')) {
         const jsonMatch = jsonContent.match(/```(?:json)?\n([\s\S]*?)\n```/)
-        if (jsonMatch) {
-            jsonContent = jsonMatch[1]
-        }
+        if (jsonMatch) jsonContent = jsonMatch[1]
     }
 
-    const parsed = JSON.parse(jsonContent)
-
-    return {
-        title: parsed.title,
-        slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
-        intro: parsed.intro,
-        items: parsed.items,
-        conclusion: parsed.conclusion,
-        tags: [cleanTopic.split(' ')[0], 'Guide', 'Ideas', 'Inspiration', '2024']
+    try {
+        const parsed = JSON.parse(jsonContent)
+        return {
+            title: parsed.title,
+            slug: topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+            excerpt: parsed.intro.substring(0, 160).replace(/<[^>]*>/g, '') + '...',
+            intro: parsed.intro,
+            items: parsed.items,
+            conclusion: parsed.conclusion,
+            tags: [cleanTopic.split(' ')[0], 'Guide', 'Ideas', 'Inspiration', '2024']
+        }
+    } catch (e) {
+        console.error("JSON Parse Error:", e)
+        console.error("Raw Content:", jsonContent)
+        throw new Error(`Failed to parse AI response. The model didn't return valid JSON.`)
     }
 }
 
 async function generateImages(items: ListicleItem[]) {
-    const { replicateToken: REPLICATE_API_TOKEN } = await getApiKeys()
-
-    if (!REPLICATE_API_TOKEN) {
-        console.warn('REPLICATE_API_TOKEN not configured, using fallback images')
-        return items.map((item, index) => ({
-            ...item,
-            imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k high quality")}`
-        }))
-    }
+    const { replicateToken, apiFreeKey } = await getApiKeys()
 
     // Generate images in parallel
     const imagePromises = items.map(async (item, index) => {
         try {
-            const response = await fetch('https://api.replicate.com/v1/predictions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${REPLICATE_API_TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    version: 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b',
-                    input: {
-                        prompt: item.imagePrompt + ", professional photography, high quality, 4k, detailed, photorealistic",
-                        negative_prompt: "ugly, blurry, low quality, distorted, watermark, text, cartoon, anime",
-                        width: 1024,
-                        height: 1024
-                    }
+            // Option 1: APIFree (DALL-E 3)
+            if (apiFreeKey) {
+                const response = await fetch('https://api.apifree.ai/v1/images/generations', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiFreeKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "dall-e-3",
+                        prompt: item.imagePrompt + ", professional photography, 4k, photorealistic",
+                        n: 1,
+                        size: "1024x1024"
+                    })
                 })
-            })
 
-            if (!response.ok) {
-                throw new Error(`Replicate API error: ${response.status}`)
+                if (response.ok) {
+                    const data = await response.json()
+                    if (data.data && data.data[0] && data.data[0].url) {
+                        return { ...item, imageUrl: data.data[0].url }
+                    }
+                } else {
+                    console.warn(`APIFree Image Error: ${response.status}`)
+                }
             }
 
-            const prediction = await response.json()
+            // Option 2: Replicate (Stable Diffusion)
+            if (replicateToken) {
+                const response = await fetch('https://api.replicate.com/v1/predictions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${replicateToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        version: 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b',
+                        input: {
+                            prompt: item.imagePrompt + ", professional photography, high quality, 4k",
+                            negative_prompt: "ugly, blurry, low quality, distorted, watermark, text",
+                            width: 1024,
+                            height: 1024
+                        }
+                    })
+                })
 
-            // Poll for completion
-            let imageUrl = await pollPrediction(prediction.id, REPLICATE_API_TOKEN)
+                if (response.ok) {
+                    const prediction = await response.json()
+                    const imageUrl = await pollPrediction(prediction.id, replicateToken)
+                    if (imageUrl) return { ...item, imageUrl }
+                }
+            }
 
+            // Fallback: Pollinations
             return {
                 ...item,
-                imageUrl: imageUrl || `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt)}`
+                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k")}`
             }
+
         } catch (error) {
             console.error(`Error generating image for item ${index}:`, error)
+            // Fallback: Pollinations
             return {
                 ...item,
-                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt)}`
+                imageUrl: `https://image.pollinations.ai/prompt/${encodeURIComponent(item.imagePrompt + " professional photography 4k")}`
             }
         }
     })
@@ -262,27 +309,15 @@ async function generateImages(items: ListicleItem[]) {
 
 async function pollPrediction(predictionId: string, token: string, maxAttempts = 30): Promise<string | null> {
     for (let i = 0; i < maxAttempts; i++) {
-        await new Promise(resolve => setTimeout(resolve, 2000)) // Wait 2 seconds
-
+        await new Promise(resolve => setTimeout(resolve, 2000))
         const response = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
-            headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Authorization': `Token ${token}` }
         })
-
         const prediction = await response.json()
-
-        if (prediction.status === 'succeeded') {
-            return prediction.output[0] // Return first image URL
-        }
-
-        if (prediction.status === 'failed') {
-            throw new Error('Image generation failed')
-        }
+        if (prediction.status === 'succeeded') return prediction.output[0]
+        if (prediction.status === 'failed') throw new Error('Image generation failed')
     }
-
-    return null // Timeout
+    return null
 }
 
 function constructHTML(articleContent: any, itemsWithImages: any[]) {
