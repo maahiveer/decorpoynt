@@ -210,7 +210,8 @@ Remember: Output ONLY the JSON object, nothing else.`
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
         console.error('Unexpected AI response format:', data)
-        throw new Error(`The AI service returned an unexpected response format. Please check your API key and quota.`)
+        const apiError = data.error?.message || data.error || data.message || JSON.stringify(data)
+        throw new Error(`AI API Error (${provider}): ${apiError}`)
     }
 
     const content = data.choices[0].message.content
