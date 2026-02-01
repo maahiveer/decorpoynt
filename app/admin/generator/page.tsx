@@ -46,12 +46,12 @@ export default function GeneratorPage() {
 
             setLoadingStep('Saving to database...')
 
-            // Save to Supabase as a Draft
-            const { data, error: dbError } = await supabase
+            let finalSlug = generatedData.slug
+            let insertAttempt = await supabase
                 .from('articles')
                 .insert({
                     title: generatedData.title,
-                    slug: generatedData.slug,
+                    slug: finalSlug,
                     content: generatedData.content,
                     excerpt: generatedData.excerpt,
                     featured_image: generatedData.featured_image,
@@ -63,7 +63,29 @@ export default function GeneratorPage() {
                 .select()
                 .single()
 
-            if (dbError) throw dbError
+            // Handle duplicate slug error (code 23505 in Postgres/Supabase)
+            if (insertAttempt.error?.code === '23505') {
+                console.log('Duplicate slug detected, retrying with unique suffix...')
+                finalSlug = `${generatedData.slug}-${Math.random().toString(36).substring(2, 7)}`
+                insertAttempt = await supabase
+                    .from('articles')
+                    .insert({
+                        title: generatedData.title,
+                        slug: finalSlug,
+                        content: generatedData.content,
+                        excerpt: generatedData.excerpt,
+                        featured_image: generatedData.featured_image,
+                        tags: generatedData.tags,
+                        status: 'draft',
+                        created_at: new Date().toISOString(),
+                        author_id: null
+                    })
+                    .select()
+                    .single()
+            }
+
+            if (insertAttempt.error) throw insertAttempt.error
+            const data = insertAttempt.data
 
             // Redirect to Editor
             router.push(`/admin/articles/${data.id}/edit`)

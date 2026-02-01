@@ -18,7 +18,7 @@ export default function SettingsPage() {
 
     // APIFree Settings
     const [apiFreeKey, setApiFreeKey] = useState('')
-    const [apiFreeModel, setApiFreeModel] = useState('gpt-4o')
+    const [apiFreeModel, setApiFreeModel] = useState('gpt-4o-mini')
     const [apiFreeImageModel, setApiFreeImageModel] = useState('dall-e-3')
     const [showApiFreeKey, setShowApiFreeKey] = useState(false)
 
@@ -92,7 +92,7 @@ export default function SettingsPage() {
                 { setting_key: 'openrouter_model', setting_value: openRouterModel.trim() || 'anthropic/claude-3.5-sonnet', updated_at: new Date().toISOString() },
 
                 { setting_key: 'apifree_api_key', setting_value: apiFreeKey.trim() || null, updated_at: new Date().toISOString() },
-                { setting_key: 'apifree_model', setting_value: apiFreeModel.trim() || 'gpt-4o', updated_at: new Date().toISOString() },
+                { setting_key: 'apifree_model', setting_value: apiFreeModel.trim() || 'gpt-4o-mini', updated_at: new Date().toISOString() },
                 { setting_key: 'apifree_image_model', setting_value: apiFreeImageModel.trim() || 'dall-e-3', updated_at: new Date().toISOString() }
             ]
 
@@ -202,10 +202,10 @@ export default function SettingsPage() {
                             value={apiFreeModel}
                             onChange={(e) => setApiFreeModel(e.target.value)}
                             className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm"
-                            placeholder="gpt-4o"
+                            placeholder="gpt-4o-mini"
                         />
                         <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            e.g., <code>gpt-4o</code>, <code>claude-3-5-sonnet</code>
+                            e.g., <code>gpt-4o-mini</code>, <code>gpt-4o</code>, <code>claude-3-5-sonnet</code>
                         </p>
                     </div>
 

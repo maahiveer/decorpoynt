@@ -59,7 +59,7 @@ async function getApiKeys() {
             replicateToken: process.env.REPLICATE_API_TOKEN,
             openrouterModel: 'anthropic/claude-3.5-sonnet',
             apiFreeKey: process.env.APIFREE_API_KEY,
-            apiFreeModel: 'gpt-4o',
+            apiFreeModel: 'gpt-4o-mini',
             apiFreeImageModel: 'dall-e-3'
         }
 
@@ -101,7 +101,7 @@ async function getApiKeys() {
             replicateToken: process.env.REPLICATE_API_TOKEN,
             openrouterModel: 'anthropic/claude-3.5-sonnet',
             apiFreeKey: process.env.APIFREE_API_KEY,
-            apiFreeModel: 'gpt-4o',
+            apiFreeModel: 'gpt-4o-mini',
             apiFreeImageModel: 'dall-e-3'
         }
     }
@@ -172,7 +172,7 @@ Remember: Output ONLY the JSON object, nothing else.`
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: apiFreeModel || 'gpt-4o',
+                model: apiFreeModel || 'gpt-4o-mini',
                 messages: [{ role: 'user', content: prompt }],
                 temperature: 0.8,
                 max_tokens: 4000
