@@ -148,7 +148,7 @@ Conclusion Requirements:
 
 Remember: Output ONLY the JSON object, nothing else.`
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -160,9 +160,8 @@ Remember: Output ONLY the JSON object, nothing else.`
                 }]
             }],
             generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 8192,
-                responseMimeType: "application/json" // Force JSON output for 1.5 Flash
+                temperature: 0.8,
+                maxOutputTokens: 8000
             }
         })
     })
