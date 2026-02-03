@@ -40,26 +40,6 @@ export function AdScripts() {
 
     return (
         <>
-            {/* Monetag Interstitial Ads - REMOVED */}
-            {/* 
-            <Script id="monetag-interstitial" strategy="afterInteractive">
-                {`(function(s){s.dataset.zone='10327495',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
-            </Script>
-            */}
-
-            {/* Monetag Inpage Push Ads */}
-            <Script id="monetag-inpage-push" strategy="afterInteractive">
-                {`(function(s){s.dataset.zone='10450838',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
-            </Script>
-
-            {/* Multitag Ads */}
-            <Script
-                src="https://quge5.com/88/tag.min.js"
-                data-zone="208023"
-                data-cfasync="false"
-                strategy="afterInteractive"
-            />
-
             {/* Google tag (gtag.js) */}
             <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-E0JTRM3ZZ7"
