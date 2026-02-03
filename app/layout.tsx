@@ -76,6 +76,7 @@ export const metadata: Metadata = {
 import { CookieConsent } from "@/components/CookieConsent";
 
 import { AdScripts } from "@/components/AdScripts";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 export default function RootLayout({
   children,
@@ -93,6 +94,7 @@ export default function RootLayout({
         </AuthProvider>
 
         <AdScripts />
+        <GoogleAnalytics />
       </body>
     </html>
   );
