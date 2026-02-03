@@ -136,6 +136,7 @@ export async function generateMetadata({ params }: ArticlePageProps) {
 }
 
 import { ArticleRenderer } from '@/components/ArticleRenderer'
+import { ArticleBannerAd } from '@/components/ArticleBannerAd'
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params
@@ -231,6 +232,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-12">
           <article className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden">
 
+            {/* Top Banner Ad */}
+            <div className="border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+              <ArticleBannerAd />
+            </div>
+
             {/* Article Header */}
             <header className="p-6 md:p-10 border-b border-slate-100 dark:border-slate-700">
               {/* Tags */}
@@ -299,6 +305,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 }}
               >
                 <ArticleRenderer content={finalContent} />
+              </div>
+
+              {/* Bottom Banner Ad */}
+              <div className="mt-12 border-t border-slate-100 dark:border-slate-700 pt-8">
+                <ArticleBannerAd />
               </div>
             </div>
 
