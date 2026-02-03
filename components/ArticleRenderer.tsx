@@ -58,11 +58,54 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
 
     }, [content])
 
+    // Function to inject ads into the HTML content
+    const injectAds = (html: string) => {
+        // Only inject if it's not localhost (matching AdScripts logic)
+        if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+            return html
+        }
+
+        const adHtml = `
+            <div class="my-10 flex justify-center overflow-hidden w-full ad-injection">
+                <div class="max-w-full overflow-x-auto">
+                    <ins style="width: 728px;height:90px;display:block;margin:0 auto;" 
+                         data-width="728" 
+                         data-height="90" 
+                         class="qeed48d325b" 
+                         data-domain="//data527.click" 
+                         data-affquery="/1b1bc0e9955c4dbdd935/eed48d325b/?placementName=default">
+                         <script src="//data527.click/js/responsive.js" async></script>
+                    </ins>
+                </div>
+            </div>
+        `
+
+        // Split by </p> to find paragraph breaks
+        const paragraphs = html.split('</p>')
+
+        // If there are very few paragraphs, don't inject inside
+        if (paragraphs.length < 4) return html
+
+        // Inject after 3rd paragraph
+        paragraphs[2] = paragraphs[2] + '</p>' + adHtml
+
+        // If it's a long article (8+ paragraphs), inject another one after 7th paragraph
+        if (paragraphs.length >= 8) {
+            paragraphs[6] = paragraphs[6] + '</p>' + adHtml
+        }
+
+        // Rejoin, making sure to handle the last paragraph which wouldn't have </p> if we didn't add it back carefully
+        // Actually, since we split by </p>, we need to add </p> back to everything except maybe the last one if it was empty
+        return paragraphs.join('</p>')
+    }
+
+    const contentWithAds = injectAds(content)
+
     return (
         <div
             ref={containerRef}
             className="article-content w-full m-0 p-0"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: contentWithAds }}
         />
     )
 }
