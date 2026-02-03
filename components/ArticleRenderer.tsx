@@ -16,10 +16,18 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
         const scripts = containerRef.current.querySelectorAll('script')
         scripts.forEach((oldScript) => {
             const newScript = document.createElement('script')
+
+            // Copy all attributes (src, async, etc.)
             Array.from(oldScript.attributes).forEach((attr) => {
                 newScript.setAttribute(attr.name, attr.value)
             })
-            newScript.appendChild(document.createTextNode(oldScript.innerHTML))
+
+            // Copy inner content if any
+            if (oldScript.innerHTML) {
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML))
+            }
+
+            // Replace the old script with the new one to trigger execution
             oldScript.parentNode?.replaceChild(newScript, oldScript)
         })
 
