@@ -82,7 +82,7 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
                          class="qeed48d325b" 
                          data-domain="//data527.click" 
                          data-affquery="/1b1bc0e9955c4dbdd935/eed48d325b/?placementName=default">
-                         <script src="//data527.click/js/responsive.js" async></script>
+                         <script src="https://data527.click/js/responsive.js" async></script>
                     </ins>
                 </div>
             </div>
