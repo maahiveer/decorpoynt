@@ -71,6 +71,11 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
+  verification: {
+    other: {
+      "p:domain_verify": "87e6d81db68e1b0059b9c64c96e18201",
+    },
+  },
 };
 
 import { CookieConsent } from "@/components/CookieConsent";
