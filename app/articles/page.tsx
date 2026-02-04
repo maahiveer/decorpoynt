@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic'
 const ARTICLES_PER_PAGE = 12
 
 export const metadata = {
-    title: 'All Guides - PickPoynt',
-    description: 'Browse all expert gardening guides and plant care tips on PickPoynt',
+    title: 'All Decor Guides - PickPoynt',
+    description: 'Browse all expert home decor guides and interior design tips on PickPoynt',
 }
 
 async function getCategories() {
@@ -79,7 +79,7 @@ export default async function ArticlesPage({
                         All Guides
                     </h1>
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                        Explore our full collection of expert gardening guides, plant care tips, and landscaping inspiration.
+                        Explore our full collection of expert home decor guides, interior design tips, and room styling inspiration.
                     </p>
                 </section>
 
@@ -115,7 +115,7 @@ export default async function ArticlesPage({
                                             {article.title}
                                         </h3>
                                         <p className="text-gray-400 text-sm mb-6 line-clamp-3">
-                                            {article.excerpt || "Click to discover expert tips and step-by-step gardening advice..."}
+                                            {article.excerpt || "Click to discover styling tips and step-by-step home decor advice..."}
                                         </p>
                                         <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
                                             <div className="flex items-center text-xs text-gray-500 gap-4">
@@ -139,7 +139,7 @@ export default async function ArticlesPage({
                     ) : (
                         <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
                             <h3 className="text-xl font-medium text-gray-300 mb-2">No guides found</h3>
-                            <p className="text-gray-500">Check back soon for new gardening inspiration.</p>
+                            <p className="text-gray-500">Check back soon for new home decor inspiration.</p>
                         </div>
                     )}
 

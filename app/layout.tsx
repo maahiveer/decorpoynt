@@ -18,14 +18,14 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.pickpoynt.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "PickPoynt - Expert Gardening Tips & Plant Care",
+    default: "PickPoynt - Modern Home Decor & Interior Design Inspiration",
     template: "%s | PickPoynt"
   },
   alternates: {
     canonical: './',
   },
-  description: "Your go-to source for expert gardening tips, plant care guides, and landscaping inspiration. From indoor plants to outdoor gardens.",
-  keywords: ["gardening", "plants", "plant care", "landscaping", "garden tips", "indoor plants"],
+  description: "Transform your living space with PickPoynt. Discover modern home decor ideas, interior design tips, and DIY styling guides for every room.",
+  keywords: ["home decor", "interior design", "modern furniture", "lighting ideas", "room styling", "DIY decor"],
   authors: [{ name: "Devika Nanda" }],
   creator: "Devika Nanda",
   publisher: "Devika Nanda",
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: siteUrl,
     siteName: 'PickPoynt',
-    title: 'PickPoynt - Expert Gardening Tips & Plant Care',
-    description: "Your go-to source for expert gardening tips, plant care guides, and landscaping inspiration.",
+    title: 'PickPoynt - Modern Home Decor & Interior Design Inspiration',
+    description: "Transform your living space with PickPoynt. Discover modern home decor ideas and room styling guides.",
     images: [
       {
         url: '/og-image.png',
@@ -58,8 +58,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PickPoynt - Expert Gardening Tips & Plant Care',
-    description: 'Discover amazing gardening tips and plant care inspiration. From indoor jungles to backyard oases, find your next project.',
+    title: 'PickPoynt - Modern Home Decor & Interior Design Inspiration',
+    description: 'Transform your living space with PickPoynt. Discover modern home decor ideas and room styling guides.',
     images: ['/og-image.png'],
     creator: '@pickpoynt',
   },

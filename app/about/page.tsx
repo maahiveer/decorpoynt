@@ -4,8 +4,8 @@ import { Mail, Youtube, Linkedin, Twitter } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export const metadata = {
-  title: 'About Devika Nanda - Gardening Enthusiast & Founder of PickPoynt',
-  description: 'Meet Devika Nanda, the founder of PickPoynt. A passionate gardener sharing organic growing tips, garden design inspiration, and sustainable living advice.',
+  title: 'About Devika Nanda - Interior Design Enthusiast & Founder of PickPoynt',
+  description: 'Meet Devika Nanda, the founder of PickPoynt. A passionate designer sharing modern home decor ideas, interior design tips, and sustainable living advice.',
 }
 
 async function getCategories() {
@@ -55,10 +55,10 @@ export default async function AboutPage() {
             {/* Hero Section */}
             <div className="text-center mb-20">
               <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-                Passion for <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">Gardening.</span>
+                Passion for <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Design.</span>
               </h1>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                Expert tips, plant care guides, and landscaping inspiration born from real hours spent in the soil.
+                Expert interior design tips, home decor guides, and room styling inspiration born from a lifelong love for beautiful spaces.
               </p>
             </div>
 
@@ -83,7 +83,7 @@ export default async function AboutPage() {
 
                     <div className="pb-4">
                       <h2 className="text-3xl font-bold text-white mb-2">Devika Nanda</h2>
-                      <p className="text-green-400 font-medium text-lg">Founder & Chief Editor</p>
+                      <p className="text-amber-400 font-medium text-lg">Founder & Chief Designer</p>
                     </div>
 
                     <div className="sm:ml-auto pb-4">
@@ -102,16 +102,16 @@ export default async function AboutPage() {
                   {/* Bio Content */}
                   <div className="prose prose-lg prose-invert max-w-none text-gray-400 leading-relaxed space-y-12">
                     <section>
-                      <h3 className="text-2xl font-bold text-white mb-4">Why I Love Gardening</h3>
+                      <h3 className="text-2xl font-bold text-white mb-4">Why I Love Home Decor</h3>
                       <div className="space-y-4">
                         <p>
-                          Hi, I&apos;m <strong>Devika Nanda</strong>. My journey with gardening started in my family&apos;s backyard, but it quickly became a lifelong passion. There&apos;s something incredibly satisfying about growing your own food, nurturing life from seed, and sharing the harvest with loved ones.
+                          Hi, I&apos;m <strong>Devika Nanda</strong>. My journey with interior design started with a simple room makeover, but it quickly became a lifelong passion. There&apos;s something incredibly satisfying about transforming a blank space into a welcoming home, balancing aesthetics with functionality, and creating an environment that reflects your personality.
                         </p>
                         <p>
-                          I spend my weekends in the <strong>garden</strong>, tending to my plants and experimenting with new varieties. Whether it&apos;s mastering soil health or discovering the secrets to a thriving vegetable patch, I live for the botanical details.
+                          I spend my weekends scouting for unique <strong>decor</strong>, experimenting with color palettes, and refining the flow of my home. Whether it&apos;s finding the perfect statement lighting or mastering the art of shelf styling, I live for the design details.
                         </p>
                         <p>
-                          Gardening isn&apos;t just a hobby to me; it&apos;s a way of life. It&apos;s creative, rewarding, and connects us with nature. But finding reliable gardening advice can be challenging. That&apos;s why I started PickPoynt—to share my gardening experiences and help you grow a thriving outdoor space.
+                          Home decor isn&apos;t just a hobby to me; it&apos;s a way to express ourselves and create comfort. But finding reliable, practical design advice can be overwhelming. That&apos;s why I started PickPoynt—to share my design experiences and help you create a home you truly love.
                         </p>
                       </div>
                     </section>
@@ -120,10 +120,10 @@ export default async function AboutPage() {
                       <h3 className="text-2xl font-bold text-white mb-4">The PickPoynt Mission</h3>
                       <div className="space-y-4">
                         <p>
-                          My mission with PickPoynt is simple: to create a resource that is packed with genuine, garden-tested advice. I believe that the most beautiful gardens aren&apos;t always the most complicated—it&apos;s what works best for your environment and lifestyle.
+                          My mission with PickPoynt is simple: to create a resource that is packed with genuine, design-tested advice. I believe that the most beautiful homes aren&apos;t always the most expensive—it&apos;s about what works best for your space and lifestyle.
                         </p>
                         <p>
-                          Every guide on this site comes from real-world testing in my garden. Whether I&apos;m analyzing plant performance or growing techniques, my goal is to give you the honest information you need to create a beautiful, productive garden.
+                          Every guide on this site comes from real-world design projects and styling sessions. Whether I&apos;m analyzing furniture durability or room layouts, my goal is to give you the honest information you need to create a beautiful, comfortable home.
                         </p>
                       </div>
                     </section>
@@ -137,9 +137,9 @@ export default async function AboutPage() {
                 <div className="flex flex-wrap justify-center gap-4">
                   <a
                     href="mailto:hello@pickpoynt.com"
-                    className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:border-green-500/50 transition-all text-gray-300 font-medium"
+                    className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:border-amber-500/50 transition-all text-gray-300 font-medium"
                   >
-                    <Mail className="h-5 w-5 mr-3 text-green-400" />
+                    <Mail className="h-5 w-5 mr-3 text-amber-400" />
                     hello@pickpoynt.com
                   </a>
 
@@ -174,7 +174,7 @@ export default async function AboutPage() {
 
               <h2 className="text-4xl font-bold mb-6 text-white">Join Our Community</h2>
               <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Get the latest gardening tips, seasonal planting guides, and personal updates delivered directly to your inbox.
+                Get the latest design trends, room styling guides, and interior inspiration delivered directly to your inbox.
               </p>
               <form className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
                 <input

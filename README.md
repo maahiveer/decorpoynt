@@ -1,4 +1,4 @@
-# TrackScale Blog
+# PickPoynt - Modern Home Decor & Interior Design Blog
 
 A beautifully designed blog website built with **Next.js** and **Supabase**. Features a clean, responsive design with a powerful admin panel for content management.
 

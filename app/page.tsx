@@ -56,8 +56,8 @@ export default async function Home() {
         {/* Hero Background Image */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=2070&auto=format&fit=crop"
-            alt="Beautiful garden background"
+            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop"
+            alt="Modern living room interior"
             className="w-full h-full object-cover"
             style={{ maskImage: 'linear-gradient(to bottom, black, transparent)' }}
           />
@@ -66,13 +66,13 @@ export default async function Home() {
 
         <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-            Grow your <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">green space</span>.
+            Elevate your <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">living space</span>.
           </h1>
 
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Expert gardening tips, plant care guides, and landscaping inspiration.
-            For plant lovers, by plant lovers.
+            Expert interior design tips, home decor guides, and room styling inspiration.
+            For design lovers, by design lovers.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -86,60 +86,59 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Gardening Categories Section */}
-      <section className="container mx-auto px-6 py-16 relative z-10 border-t border-white/5">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore by Category</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Discover expert guides organized by plant type and gardening technique
-          </p>
-        </div>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore Rooms & Styles</h2>
+      <p className="text-gray-400 max-w-2xl mx-auto">
+        Discover expert guides organized by room type and decor style
+      </p>
+    </div>
 
-        {categories.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category) => {
-              const Icon = getCategoryIcon(category.name)
-              const gradient = getCategoryGradient(category.name)
-              const iconColor = getIconColor(category.name)
+        {
+    categories.length > 0 ? (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {categories.map((category) => {
+          const Icon = getCategoryIcon(category.name)
+          const gradient = getCategoryGradient(category.name)
+          const iconColor = getIconColor(category.name)
 
-              return (
-                <Link
-                  key={category.id}
-                  href={`/categories/${category.slug}`}
-                  className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br border border-white/10 p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${gradient}`}
-                >
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          return (
+            <Link
+              key={category.id}
+              href={`/categories/${category.slug}`}
+              className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br border border-white/10 p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${gradient}`}
+            >
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  {/* Internal Glow */}
-                  <div className="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+              {/* Internal Glow */}
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
 
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    <Icon className={`w-10 h-10 md:w-12 md:h-12 mb-3 ${iconColor} group-hover:scale-110 transition-transform duration-500`} />
-                    <h3 className="text-lg md:text-xl font-bold text-white mb-1">{category.name}</h3>
-                    <p className="text-xs md:text-sm text-gray-400 line-clamp-1">
-                      {category.description || `Explore ${category.name} guides`}
-                    </p>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
-            <h3 className="text-xl font-medium text-gray-300 mb-2">No categories found</h3>
-            <p className="text-gray-500">Add categories in the admin panel to see them here.</p>
-            <Link href="/admin/categories" className="mt-4 inline-block text-purple-400 hover:text-purple-300">
-              Go to Category Manager &rarr;
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <Icon className={`w-10 h-10 md:w-12 md:h-12 mb-3 ${iconColor} group-hover:scale-110 transition-transform duration-500`} />
+                <h3 className="text-lg md:text-xl font-bold text-white mb-1">{category.name}</h3>
+                <p className="text-xs md:text-sm text-gray-400 line-clamp-1">
+                  {category.description || `Explore ${category.name} guides`}
+                </p>
+              </div>
             </Link>
-          </div>
-        )}
-      </section>
+          )
+        })}
+      </div>
+    ) : (
+    <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
+      <h3 className="text-xl font-medium text-gray-300 mb-2">No categories found</h3>
+      <p className="text-gray-500">Add categories in the admin panel to see them here.</p>
+      <Link href="/admin/categories" className="mt-4 inline-block text-purple-400 hover:text-purple-300">
+        Go to Category Manager &rarr;
+      </Link>
+    </div>
+  )
+  }
+      </section >
 
-      {/* Footer Simple */}
-      <footer className="border-t border-white/5 py-12 text-center text-sm text-gray-600">
-        <p>&copy; {new Date().getFullYear()} PickPoynt. All rights reserved.</p>
-      </footer>
-    </main>
+    {/* Footer Simple */ }
+    < footer className = "border-t border-white/5 py-12 text-center text-sm text-gray-600" >
+      <p>&copy; {new Date().getFullYear()} PickPoynt. All rights reserved.</p>
+      </footer >
+    </main >
   )
 }
 
