@@ -83,30 +83,30 @@ export default async function ArticlesPage({
                     </p>
                 </section>
 
-                {/* Articles Grid */}
+                {/* Articles Masonry Grid */}
                 <section className="container mx-auto px-6 pb-24">
                     {articles.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
                             {articles.map((article: any) => (
                                 <Link
                                     key={article.id}
                                     href={`/${article.slug}`}
-                                    className="group relative flex flex-col h-full rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10"
+                                    className="group relative flex flex-col break-inside-avoid rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10 mb-8"
                                 >
                                     {/* Image */}
-                                    <div className="aspect-[16/9] w-full overflow-hidden bg-white/5 relative">
+                                    <div className="w-full overflow-hidden bg-white/5 relative">
                                         {article.featured_image ? (
                                             <img
                                                 src={article.featured_image}
                                                 alt={article.title}
-                                                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                                className="w-full h-auto block group-hover:scale-105 transition-transform duration-500"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-500">
+                                            <div className="aspect-video w-full h-full flex items-center justify-center text-gray-500">
                                                 <Zap className="w-10 h-10 opacity-20" />
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#030014] to-transparent opacity-60" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#030014] to-transparent opacity-40 group-hover:opacity-20 transition-opacity" />
                                     </div>
 
                                     {/* Content */}

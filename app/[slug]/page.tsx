@@ -283,11 +283,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
               {/* Featured Image */}
               {article.featured_image && (
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+                <div className="relative w-full rounded-xl overflow-hidden shadow-lg mb-8">
                   <img
                     src={article.featured_image}
                     alt={extractedTitle}
-                    className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-700"
+                    className="w-full h-auto block transform hover:scale-105 transition-transform duration-700"
                   />
                 </div>
               )}

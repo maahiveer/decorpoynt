@@ -126,7 +126,18 @@
 }
 
 .article-content img {
-  @apply max-w-full h-auto rounded-lg shadow-md my-6 mx-auto;
+  @apply max-w-full h-auto rounded-xl shadow-lg my-8 mx-auto block transition-transform duration-500 hover:scale-[1.02];
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .article-content img {
+    width: calc(100% + 2rem) !important;
+    max-width: none !important;
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+    border-radius: 0 !important;
+  }
 }
 
 .article-content pre {

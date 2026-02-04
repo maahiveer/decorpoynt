@@ -105,11 +105,11 @@ export default function PreviewPage() {
 
             <article className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
               {article.featured_image && (
-                <div className="aspect-[16/9]">
+                <div className="w-full">
                   <img
                     src={article.featured_image}
                     alt={article.title}
-                    className="h-full w-full object-cover"
+                    className="w-full h-auto block"
                   />
                 </div>
               )}
