@@ -66,12 +66,10 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
 
     }, [content])
 
-    // Function to inject ads into the HTML content
-    const injectAds = (html: string) => {
-        // Only inject if it's not localhost (matching AdScripts logic)
-        if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-            return html
-        }
+    // Function to inject ads and related articles into the HTML content
+    const injectAdsAndRelated = (html: string) => {
+        // Only inject ads if it's not localhost (matching AdScripts logic)
+        const shouldInjectAds = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
 
         const adHtml = `
             <div class="my-10 flex justify-center overflow-hidden w-full ad-injection">
@@ -88,26 +86,49 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
             </div>
         `
 
+        const relatedArticlesHtml = `
+            <div class="my-8 mx-auto max-w-4xl px-4">
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg border-l-4 border-blue-500 shadow-md">
+                    <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+                        <span class="mr-2">📚</span>
+                        You Might Also Like
+                    </h3>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                        Loading related articles...
+                    </div>
+                </div>
+            </div>
+        `
+
         // Split by </p> to find paragraph breaks
         const paragraphs = html.split('</p>')
 
         // If there are very few paragraphs, don't inject inside
         if (paragraphs.length < 4) return html
 
-        // Inject after 3rd paragraph
-        paragraphs[2] = paragraphs[2] + '</p>' + adHtml
-
-        // If it's a long article (8+ paragraphs), inject another one after 7th paragraph
-        if (paragraphs.length >= 8) {
-            paragraphs[6] = paragraphs[6] + '</p>' + adHtml
+        // Inject ad after 3rd paragraph (if ads enabled)
+        if (shouldInjectAds) {
+            paragraphs[2] = paragraphs[2] + '</p>' + adHtml
         }
 
-        // Rejoin, making sure to handle the last paragraph which wouldn't have </p> if we didn't add it back carefully
-        // Actually, since we split by </p>, we need to add </p> back to everything except maybe the last one if it was empty
+        // Inject related articles around 40-50% through the content
+        const relatedInjectionPoint = Math.floor(paragraphs.length * 0.45)
+        if (relatedInjectionPoint > 2 && relatedInjectionPoint < paragraphs.length - 1) {
+            paragraphs[relatedInjectionPoint] = paragraphs[relatedInjectionPoint] + '</p>' + relatedArticlesHtml
+        }
+
+        // If it's a long article (8+ paragraphs), inject another ad after 7th paragraph
+        if (shouldInjectAds && paragraphs.length >= 8) {
+            const adInjectionPoint = relatedInjectionPoint > 6 ? relatedInjectionPoint + 2 : 6
+            if (adInjectionPoint < paragraphs.length - 1) {
+                paragraphs[adInjectionPoint] = paragraphs[adInjectionPoint] + '</p>' + adHtml
+            }
+        }
+
         return paragraphs.join('</p>')
     }
 
-    const contentWithAds = injectAds(content)
+    const contentWithAds = injectAdsAndRelated(content)
 
     return (
         <div

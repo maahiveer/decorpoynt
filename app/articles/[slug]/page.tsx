@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { Calendar, Clock, User } from 'lucide-react'
 import type { Metadata } from 'next'
+import { RelatedArticles } from '@/components/RelatedArticles'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -164,6 +165,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div dangerouslySetInnerHTML={{ __html: finalContent }} />
             </div>
           </article>
+
+          {/* Related Articles Section */}
+          <RelatedArticles
+            currentArticleId={article.id}
+            currentTags={article.tags || []}
+            limit={3}
+          />
         </div>
       </main>
     </div>
