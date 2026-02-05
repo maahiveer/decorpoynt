@@ -50,6 +50,11 @@ export function AdScripts() {
                 src="https://pl28648479.effectivegatecpm.com/aa/90/72/aa907216629ecee5bf233dfb8657499a.js"
                 strategy="afterInteractive"
             />
+            {/* Social Bar Script */}
+            <Script
+                src="https://pl28651807.effectivegatecpm.com/bf/27/4f/bf274f018156e7a4f1be874ff6c82e0e.js"
+                strategy="afterInteractive"
+            />
         </>
     )
 }
