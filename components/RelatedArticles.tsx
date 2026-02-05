@@ -42,17 +42,8 @@ export function RelatedArticles({ currentArticleId, currentTags = [], limit = 3 
                 }
 
                 if (data && data.length > 0) {
-                    // .. sorting logic ..
-                    if (currentTags.length > 0) {
-                        const sorted = data.sort((a: any, b: any) => {
-                            const aMatches = a.tags?.filter((tag: string) => currentTags.includes(tag)).length || 0
-                            const bMatches = b.tags?.filter((tag: string) => currentTags.includes(tag)).length || 0
-                            return bMatches - aMatches
-                        })
-                        setArticles(sorted)
-                    } else {
-                        setArticles(data)
-                    }
+                    // Just show the latest articles as requested
+                    setArticles(data)
                 } else {
                     // FALLBACK: Use mock data so the user can verify the UI works
                     console.log('No articles found, using mock data')

@@ -35,16 +35,7 @@ export function InArticleRelated({ currentArticleId, currentTags = [], limit = 2
                 if (error) throw error
 
                 if (data && data.length > 0) {
-                    if (currentTags.length > 0) {
-                        const sorted = data.sort((a: any, b: any) => {
-                            const aMatches = (a as any).tags?.filter((tag: string) => currentTags.includes(tag)).length || 0
-                            const bMatches = (b as any).tags?.filter((tag: string) => currentTags.includes(tag)).length || 0
-                            return bMatches - aMatches
-                        })
-                        setArticles(sorted)
-                    } else {
-                        setArticles(data)
-                    }
+                    setArticles(data)
                 } else {
                     // Fallback mock data
                     setArticles([
