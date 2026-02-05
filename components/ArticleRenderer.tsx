@@ -95,7 +95,7 @@ export function ArticleRenderer({ content, articleId, tags }: ArticleRendererPro
         // Remove the extra </p> from the last empty element if split created one
         if (parts[parts.length - 1] === '</p>') parts.pop()
 
-        if (parts.length < 4) {
+        if (parts.length < 2) {
             return <div dangerouslySetInnerHTML={{ __html: content }} />
         }
 
