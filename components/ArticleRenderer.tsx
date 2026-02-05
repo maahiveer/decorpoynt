@@ -2,11 +2,15 @@
 
 import { useEffect, useRef } from 'react'
 
+import { InArticleRelated } from './InArticleRelated'
+
 interface ArticleRendererProps {
     content: string
+    articleId?: string
+    tags?: string[]
 }
 
-export function ArticleRenderer({ content }: ArticleRendererProps) {
+export function ArticleRenderer({ content, articleId, tags }: ArticleRendererProps) {
     const containerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -66,12 +70,9 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
 
     }, [content])
 
-    // Function to inject ads into the HTML content
-    const injectAds = (html: string) => {
-        // Only inject ads if it's not localhost (matching AdScripts logic)
+    // Logic to split content and inject ads + related articles
+    const renderContent = () => {
         const shouldInjectAds = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-
-        if (!shouldInjectAds) return html
 
         const adHtml = `
             <div class="my-10 flex justify-center overflow-hidden w-full ad-injection">
@@ -88,30 +89,71 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
             </div>
         `
 
-        // Split by </p> to find paragraph breaks
-        const paragraphs = html.split('</p>')
+        // Split by </p> to get paragraphs (keep the delimiter)
+        const parts = content.split('</p>').map(p => p + '</p>')
 
-        // If there are very few paragraphs, don't inject inside
-        if (paragraphs.length < 4) return html
+        // Remove the extra </p> from the last empty element if split created one
+        if (parts[parts.length - 1] === '</p>') parts.pop()
 
-        // Inject ad after 3rd paragraph
-        paragraphs[2] = paragraphs[2] + '</p>' + adHtml
-
-        // If it's a long article (8+ paragraphs), inject another ad after 7th paragraph
-        if (paragraphs.length >= 8) {
-            paragraphs[6] = paragraphs[6] + '</p>' + adHtml
+        if (parts.length < 4) {
+            return <div dangerouslySetInnerHTML={{ __html: content }} />
         }
 
-        return paragraphs.join('</p>')
-    }
+        const elements: React.ReactNode[] = []
+        let currentBlock = ''
 
-    const contentWithAds = injectAds(content)
+        // Strategy:
+        // 1. Accumulate HTML strings
+        // 2. Push to elements array when we hit an injection point
+        // 3. Push the injection component
+        // 4. Reset accumulator
+
+        const relatedInjectionIndex = Math.floor(parts.length * 0.45) // Middle
+        const adInjectionIndex1 = 2 // After 3rd paragraph (index 2)
+        const adInjectionIndex2 = 6 // After 7th paragraph (index 6)
+
+        parts.forEach((part, index) => {
+            currentBlock += part
+
+            // Inject Ad 1
+            if (shouldInjectAds && index === adInjectionIndex1) {
+                currentBlock += adHtml
+            }
+
+            // Inject Related Articles Component
+            if (articleId && index === relatedInjectionIndex) {
+                // Push accumulated HTML
+                elements.push(<div key={`block-${index}`} dangerouslySetInnerHTML={{ __html: currentBlock }} />)
+                // Push React Component
+                elements.push(
+                    <div key="in-article-related" className="my-8">
+                        <InArticleRelated currentArticleId={articleId} currentTags={tags} limit={2} />
+                    </div>
+                )
+                // Reset accumulator
+                currentBlock = ''
+            }
+
+            // Inject Ad 2
+            if (shouldInjectAds && index === adInjectionIndex2 && parts.length >= 8) {
+                currentBlock += adHtml
+            }
+        })
+
+        // Push remaining content
+        if (currentBlock) {
+            elements.push(<div key="remaining" dangerouslySetInnerHTML={{ __html: currentBlock }} />)
+        }
+
+        return elements
+    }
 
     return (
         <div
             ref={containerRef}
             className="article-content w-full m-0 p-0"
-            dangerouslySetInnerHTML={{ __html: contentWithAds }}
-        />
+        >
+            {renderContent()}
+        </div>
     )
 }

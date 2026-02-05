@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { Calendar, Clock, User } from 'lucide-react'
 import type { Metadata } from 'next'
 import { RelatedArticles } from '@/components/RelatedArticles'
+import { ArticleRenderer } from '@/components/ArticleRenderer'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -161,9 +162,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <main className="w-full p-0 m-0">
         <div className="w-full p-0 m-0">
           <article className="w-full max-w-none p-0 m-0">
-            <div className="article-content w-full">
-              <div dangerouslySetInnerHTML={{ __html: finalContent }} />
-            </div>
+            <ArticleRenderer
+              content={finalContent}
+              articleId={article.id}
+              tags={article.tags}
+            />
           </article>
 
           {/* Related Articles Section */}
